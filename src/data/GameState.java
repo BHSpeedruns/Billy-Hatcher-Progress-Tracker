@@ -1,0 +1,176 @@
+package data;
+
+import java.util.ArrayList;
+
+public class GameState {
+	
+	public boolean isUpdated = true;
+	
+	private int courageEmblems 	= 0;
+	
+	private int levelsCompleted = 0;
+	private int chickCoins 		= 0;
+	private int eggsHatched 	= 0;
+	private int sRanks 			= 0;
+	
+	private boolean[] eggList = new boolean[72];
+	private World[] worlds = new World[7];
+	
+	public GameState() {
+		for(int i = 0; i < worlds.length; i++) { worlds[i] = new World(i); }
+		getLevel(0).setState(LevelState.INCOMPLETE); //first level is accessible by default
+	}
+
+	public final int getNumCourageEmblems    (){ return courageEmblems;  }
+	public final int getNumLevelsCompleted   (){ return levelsCompleted; }
+	public final int getNumChickCoins        (){ return chickCoins;      }
+	public final int getNumEggsHatched       (){ return eggsHatched;     }
+	public final int getNumSRanks            (){ return sRanks;          }
+	
+	public final int[] getSummaryData() { 
+		return new int[]{courageEmblems,levelsCompleted,chickCoins,eggsHatched,sRanks};
+	}
+	
+	public final void setCoinsCollected(int level, int coins) {
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS && coins!=5) { decrementCourageEmblems(); } //Unset "All Coins" Emblem
+		
+		chickCoins -= worlds[level/8].getLevel(level%8).getNumChickCoins();
+		chickCoins += coins;
+		
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { incrementCourageEmblems(); } //Set "All Coins" Emblem
+		
+		worlds[level/8].getLevel(level%8).setNumChickCoins(coins);
+		
+		isUpdated = true;
+	}
+	
+	public final Level getLevel(int level) { return worlds[level/8].getLevel(level%8); }	
+	
+	public final Level[] completeLevel(int level, Rank rank) {
+		Level levelCompleted = getLevel(level);
+		
+		if(levelCompleted.getRank() != Rank.S && rank == Rank.S)      { incrementSRanks(); } //New S Rank
+		else if(levelCompleted.getRank() == Rank.S && rank != Rank.S) { decrementSRanks(); } //Removing Faulty/Accidental S Rank
+		
+		levelCompleted.setRank(rank);
+		
+		isUpdated = true;
+		
+		if(levelCompleted.getState() != LevelState.COMPLETE) { incrementCourageEmblems(); incrementLevelsCompleted(); }
+		return propagateLevelChange(level, LevelState.COMPLETE);
+	}
+	public final Level[] incompleteLevel(int level) {
+		Level levelCompleted = getLevel(level);
+		
+		if(levelCompleted.getRank() == Rank.S) { decrementSRanks(); }
+		levelCompleted.setRank(Rank.NORANK);
+		
+		isUpdated = true;
+		
+		decrementCourageEmblems(); decrementLevelsCompleted();
+		return propagateLevelChange(level, LevelState.INCOMPLETE);
+	}
+	private final Level[] propagateLevelChange(int level, LevelState state) {
+		
+		int worldNum = level/8, levelNum = level%8;
+		ArrayList<Level> levelList = new ArrayList<Level>();
+		
+		//Do not propagate already completed levels
+		if(getLevel(level).getState() == state) { return null; }
+		
+		getLevel(level).setState(state);
+		
+		//Billy Level unlocks next billy level (1->2->3->4->5)
+		if(levelNum <= 3) {
+			//Making sand 3 available is special
+			if(!(worldNum == 5 && levelNum == 2) || (courageEmblems >= 25)) {
+				levelList.add(getLevel(worldNum*8+levelNum+1)); 
+			}
+		}	
+		
+		//First Level unlocks friend levels in that world
+		if(levelNum == 0) { 
+			for(int friendNum = 0; friendNum < 3; friendNum++) {
+				if(getLevel((1+friendNum)*8 + 3).getState() == LevelState.COMPLETE) { 
+					levelList.add(getLevel(worldNum*8+friendNum+5)); 
+				}
+			}
+		}
+		
+		//Boss Level unlocks next world elder mission
+		else if(worldNum <= 4 && levelNum == 1 ) { levelList.add(getLevel((worldNum+1)*8)); } 
+		
+		//Friend unlocked
+		else if(worldNum >= 1 && worldNum <= 3 && levelNum == 3) { 
+			for(int world = 0; world < 7; world++) {
+				if(getLevel(world*8).getState() == LevelState.COMPLETE) { levelList.add(getLevel(world*8+(4+worldNum))); }
+			}
+		}
+		
+		//Sand 3 unlocks Palace 1
+		else if(worldNum == 5 && levelNum == 2) { levelList.add(getLevel(48)); } 
+		
+		LevelState followUpState = LevelState.INCOMPLETE;
+		if(state == LevelState.INCOMPLETE) { followUpState = LevelState.INACCESSIBLE; }
+		
+		for(int i = 0; i < levelList.size(); i++) {
+			levelList.get(i).setState(followUpState);
+		}
+		
+		return levelList.toArray(new Level[0]);
+	}
+	
+	public final void toggleEggHatched(int egg) {
+		if(eggList[egg]) { decrementEggsHatched(); }
+		else { incrementEggsHatched(); }
+		eggList[egg] = !eggList[egg];
+		isUpdated = true;
+	}
+	
+	
+	
+	//FIXME: this duplicate style code annoys me
+	private final void incrementCourageEmblems() {
+		courageEmblems++;
+		if(courageEmblems == GameDataLookup.MAX_EMBLEMS) { } //100% !!!
+		isUpdated = true;
+	}
+	private final void decrementCourageEmblems() {
+		if(courageEmblems == GameDataLookup.MAX_EMBLEMS) { } //Not 100% :(
+		courageEmblems--;
+		isUpdated = true;
+	}
+	
+	private final void incrementLevelsCompleted() {
+		levelsCompleted++;
+		if(levelsCompleted == GameDataLookup.MAX_LEVELS) { incrementCourageEmblems(); } //Set "All Levels" Emblem
+		isUpdated = true;
+	}
+	private final void decrementLevelsCompleted() {
+		if(levelsCompleted == GameDataLookup.MAX_LEVELS) { decrementCourageEmblems(); } //Unset "All Levels" Emblem
+		levelsCompleted--;
+		isUpdated = true;
+	}
+	
+	private final void incrementSRanks() {
+		sRanks++;
+		if(sRanks == GameDataLookup.MAX_SRANKS) { incrementCourageEmblems(); } //Set "All S Ranks" Emblem
+		isUpdated = true;
+	}
+	private final void decrementSRanks() {
+		if(sRanks == GameDataLookup.MAX_SRANKS) { decrementCourageEmblems(); } //Unset "All S Ranks" Emblem
+		sRanks--;
+		isUpdated = true;
+	}
+	
+	private final void incrementEggsHatched() {
+		eggsHatched++; 
+		if(eggsHatched == GameDataLookup.MAX_EGGS) { incrementCourageEmblems(); } //Set "All Eggs" Emblem
+		isUpdated = true;
+	}
+	private final void decrementEggsHatched() {
+		if(eggsHatched == GameDataLookup.MAX_EGGS) { decrementCourageEmblems(); } //Unset "All Eggs" Emblem
+		eggsHatched--;
+		isUpdated = true;
+	}
+}
