@@ -69,7 +69,7 @@ public final class ProgressTracker {
 	private void runMain() { 
 		while(true) {
 			//FIXME: a lock??
-			try { Thread.sleep(500); } catch(Exception e) {}
+			try { Thread.sleep(10); } catch(Exception e) {}
 			graphics.redrawIfNeeded();
 		}
 	}

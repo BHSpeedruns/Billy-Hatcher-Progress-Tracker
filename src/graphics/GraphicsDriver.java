@@ -18,7 +18,6 @@ public final class GraphicsDriver {
 	
 	public void initialize(GameState game) {
 		graphicsstate.initialize();
-		System.out.println("GraphicsDriver gs = \t"+graphicsstate);
 		gamestate = game;
 		initializeResources();
 		initializeFrames();

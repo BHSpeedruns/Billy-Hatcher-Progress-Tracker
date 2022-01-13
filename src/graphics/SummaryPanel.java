@@ -20,7 +20,6 @@ public class SummaryPanel extends JFrame{
 	public void initialize(GraphicsState graphicsstate, GameState gamestate) {
 		graphics = graphicsstate;
 		game = gamestate;
-		System.out.println("SummaryPanel gs = \t"+graphics);
 		
 		setUndecorated(true);
 		setTitle("CHOOSE THIS WINDOW FOR CAPTURE");
@@ -41,7 +40,7 @@ class SummaryPane extends JPanel {
 	GameState game;
 	GraphicsState graphics;
 	
-	public void initialize(GraphicsState graphicsstate, GameState gamestate) { graphics = graphicsstate; System.out.println("SummaryPane gs = \t"+graphics); game = gamestate; }
+	public void initialize(GraphicsState graphicsstate, GameState gamestate) { graphics = graphicsstate; game = gamestate; }
 	
 	protected void paintComponent(Graphics g) {		
 		super.paintComponent(g);

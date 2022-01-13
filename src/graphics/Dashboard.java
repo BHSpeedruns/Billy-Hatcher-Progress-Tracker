@@ -33,7 +33,6 @@ public class Dashboard extends JFrame implements MouseListener {
 		eggGallery.initialize(graphics,game);
 		levelSelect.initialize(graphics,game);
 		
-		System.out.println("Dashboard gs = \t\t"+graphics);
 		setTitle("Billy Hatcher 100% Progress Tracker");
 		pack();
 		add(eggGallery);
@@ -46,13 +45,15 @@ public class Dashboard extends JFrame implements MouseListener {
 	}
 	
 	public void update() { 
-		if(graphics.getScreen() == WindowState.EggGallery) { 
-			eggGallery.setVisible(true);
+		if(graphics.getScreen() == WindowState.EggGallery) {
 			levelSelect.setVisible(false);
+			eggGallery.repaint();
+			eggGallery.setVisible(true);
 		}
 		else if(graphics.getScreen() == WindowState.LevelSelect) {
-			levelSelect.setVisible(true);
 			eggGallery.setVisible(false);
+			levelSelect.repaint();
+			levelSelect.setVisible(true);
 		}
 	}
 
@@ -71,8 +72,6 @@ class EggGallery extends JPanel{
 	public void initialize(GraphicsState g, GameState gm) {
 		graphics = g;
 		game = gm;
-		
-		System.out.println("EggGallery gs = \t"+graphics);
 		
 		JButton levelSelectButton = new JButton();
 		levelSelectButton.setText("Level Select");
@@ -121,7 +120,6 @@ class LevelSelect extends JPanel{
 	public void initialize(GraphicsState g, GameState gm) {
 		graphics = g;
 		game = gm;
-		System.out.println("LevelSelect gs = \t"+graphics);
 		
 		JButton eggGalleryButton = new JButton();
         eggGalleryButton.setText("Egg Gallery");
@@ -328,17 +326,17 @@ class LevelSelect extends JPanel{
 	protected void paintComponent(Graphics g) {		
 		super.paintComponent(g);
 		
-		System.out.println("Painting!");
-		//DO THE BUTTON HIGHLIGHTING AND THE CANVAS PAINTING
 		Dimension window = graphics.getDashboardDimensions();
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, window.width, window.height);
 		g.setColor(Color.WHITE);
-		g.drawString("World "+graphics.getWorldNum(), 30, 300);
-		g.drawString("Level "+graphics.getLevelNum(), 30, 350);
+		g.drawString("World "+(graphics.getWorldNum()+1), 30, 300);
+		g.drawString("Level "+(graphics.getLevelNum()+1), 30, 350);
 		if(graphics.getWorldNum() != -1 && graphics.getLevelNum() != -1) {
 			g.drawString(GameDataLookup.getFullLevelName(graphics.getWorldNum()*8 + graphics.getLevelNum()), 30, 400);
 		}
+		
+		//DO THE BUTTON HIGHLIGHTING
 		
 	}
 }
