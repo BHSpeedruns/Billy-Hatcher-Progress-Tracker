@@ -1,6 +1,8 @@
 package graphics;
 
+import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,39 +15,42 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import data.GameDataLookup;
+import data.GameState;
 
 enum WindowState { EggGallery, LevelSelect }
 
 public class Dashboard extends JFrame implements MouseListener {
 	
-	private WindowState screen;
+	private GraphicsState graphics;
+	private GameState game;
 	
-	EggGallery eggGallery = new EggGallery();
-	LevelSelect levelSelect = new LevelSelect();
+	static EggGallery eggGallery = new EggGallery();
+	static LevelSelect levelSelect = new LevelSelect();
 	
-	private final int WIDTH = 1020, HEIGHT = 620;
-	
-	public void initialize() {
-		screen = WindowState.LevelSelect;
+	public void initialize(GraphicsState g, GameState gm) {
+		graphics = g;
+		game = gm;
+		eggGallery.initialize(graphics,game);
+		levelSelect.initialize(graphics,game);
+		
+		System.out.println("Dashboard gs = \t\t"+graphics);
 		setTitle("Billy Hatcher 100% Progress Tracker");
 		pack();
 		add(eggGallery);
 		add(levelSelect);
-		setSize(WIDTH,HEIGHT);
+		setSize(g.getDashboardDimensions());
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setLocationRelativeTo(null);
-		eggGallery.initialize();
-		levelSelect.initialize();
 	}
 	
 	public void update() { 
-		if(screen == WindowState.EggGallery) { 
+		if(graphics.getScreen() == WindowState.EggGallery) { 
 			eggGallery.setVisible(true);
 			levelSelect.setVisible(false);
 		}
-		else if(screen == WindowState.LevelSelect) {
+		else if(graphics.getScreen() == WindowState.LevelSelect) {
 			levelSelect.setVisible(true);
 			eggGallery.setVisible(false);
 		}
@@ -60,19 +65,64 @@ public class Dashboard extends JFrame implements MouseListener {
 
 class EggGallery extends JPanel{
 	
-	public void initialize() {
-		
-	}
+	private GraphicsState graphics;
+	private GameState game;
 	
+	public void initialize(GraphicsState g, GameState gm) {
+		graphics = g;
+		game = gm;
+		
+		System.out.println("EggGallery gs = \t"+graphics);
+		
+		JButton levelSelectButton = new JButton();
+		levelSelectButton.setText("Level Select");
+		levelSelectButton.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	            	levelSelectButtonPressed(e);
+	            }
+        });
+		GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    //.addComponent(canvas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(levelSelectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+            .addGap(0, 0, 0)))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                //.addComponent(canvas, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(levelSelectButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+        );
+	}
+
+	protected void levelSelectButtonPressed(ActionEvent e) { graphics.setScreen(WindowState.LevelSelect); }
+	
+	protected void paintComponent(Graphics g) {		
+		super.paintComponent(g);
+		//TODO:Content
+	}
 }
 
 class LevelSelect extends JPanel{
 	
-	public boolean isActive = false;
+	GraphicsState graphics;
+	GameState game;
 	
-	private int worldNum = -1, levelNum = -1;
-	
-	public void initialize() {
+	public void initialize(GraphicsState g, GameState gm) {
+		graphics = g;
+		game = gm;
+		System.out.println("LevelSelect gs = \t"+graphics);
+		
 		JButton eggGalleryButton = new JButton();
         eggGalleryButton.setText("Egg Gallery");
         eggGalleryButton.addActionListener(new ActionListener() {
@@ -137,6 +187,69 @@ class LevelSelect extends JPanel{
             }
         });
         
+        JButton level1 = new JButton();
+        level1.setText("Mission 1");
+        level1.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		levelButtonPressed(e,0);
+        	}
+        });
+        
+        JButton level2 = new JButton();
+        level2.setText("Mission 2");
+        level2.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		levelButtonPressed(e,1);
+        	}
+        });
+        
+        JButton level3 = new JButton();
+        level3.setText("Mission 3");
+        level3.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		levelButtonPressed(e,2);
+        	}
+        });
+        
+        JButton level4 = new JButton();
+        level4.setText("Mission 4");
+        level4.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		levelButtonPressed(e,3);
+        	}
+        });
+        
+        JButton level5 = new JButton();
+        level5.setText("Mission 5");
+        level5.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		levelButtonPressed(e,4);
+        	}
+        });
+        
+        JButton level6 = new JButton();
+        level6.setText("Mission 6");
+        level6.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		levelButtonPressed(e,5);
+        	}
+        });
+        
+        JButton level7 = new JButton();
+        level7.setText("Mission 7");
+        level7.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		levelButtonPressed(e,6);
+        	}
+        });
+        
+        JButton level8 = new JButton();
+        level8.setText("Mission 8");
+        level8.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		levelButtonPressed(e,7);
+        	}
+        });
         
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
@@ -145,7 +258,7 @@ class LevelSelect extends JPanel{
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     //.addComponent(canvas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                	.addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(eggGalleryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(forestVillageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -160,14 +273,41 @@ class LevelSelect extends JPanel{
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(sandRuinButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(giantPalaceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(0, 0, 0))
+                        .addComponent(giantPalaceButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(level1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(level2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(level3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(level4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(level5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(level6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(level7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(level8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                //.addComponent(canvas, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(430)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(level1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(level2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(level3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(level4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(level5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(level6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(level7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(level8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(eggGalleryButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -180,21 +320,26 @@ class LevelSelect extends JPanel{
                     .addComponent(giantPalaceButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 	}
-	
-	private void eggGalleryButtonPressed(ActionEvent e) {
-		isActive = false; //TODO: not sure how to tell Dashboard to switch
-		repaint();
-	}
 
-	private void worldButtonPressed(ActionEvent e, int i) {
-		
-	}
+	private void eggGalleryButtonPressed(ActionEvent e) { graphics.setScreen(WindowState.EggGallery); graphics.update(); }
+	private void worldButtonPressed(ActionEvent e, int i) { graphics.setWorldNum(i); graphics.update(); }
+	private void levelButtonPressed(ActionEvent e, int i) { graphics.setLevelNum(i); graphics.update(); } 
 
 	protected void paintComponent(Graphics g) {		
 		super.paintComponent(g);
 		
-		
+		System.out.println("Painting!");
 		//DO THE BUTTON HIGHLIGHTING AND THE CANVAS PAINTING
+		Dimension window = graphics.getDashboardDimensions();
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, window.width, window.height);
+		g.setColor(Color.WHITE);
+		g.drawString("World "+graphics.getWorldNum(), 30, 300);
+		g.drawString("Level "+graphics.getLevelNum(), 30, 350);
+		if(graphics.getWorldNum() != -1 && graphics.getLevelNum() != -1) {
+			g.drawString(GameDataLookup.getFullLevelName(graphics.getWorldNum()*8 + graphics.getLevelNum()), 30, 400);
+		}
+		
 	}
 }
 

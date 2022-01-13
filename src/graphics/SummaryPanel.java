@@ -1,20 +1,27 @@
 package graphics;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import data.GameDataLookup;
+import data.GameState;
 
 public class SummaryPanel extends JFrame{
 	
-	private final int WIDTH = 510, HEIGHT = 310;
+	GraphicsState graphics;
+	GameState game;
 	
 	private SummaryPane pane = new SummaryPane();
 	
-	public void initialize() {
+	public void initialize(GraphicsState graphicsstate, GameState gamestate) {
+		graphics = graphicsstate;
+		game = gamestate;
+		System.out.println("SummaryPanel gs = \t"+graphics);
+		
 		setUndecorated(true);
 		setTitle("CHOOSE THIS WINDOW FOR CAPTURE");
 		add(pane);
@@ -23,26 +30,33 @@ public class SummaryPanel extends JFrame{
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+		pane.initialize(graphicsstate, gamestate);
+		
 	}
 	
-	public void update(int[] data) { 
-		pane.setData(data);
-		repaint(); 
-	}
+	public void update() { repaint(); }
 }
 class SummaryPane extends JPanel {
 	
-	private int[] data = {0,0,0,0,0};
+	GameState game;
+	GraphicsState graphics;
+	
+	public void initialize(GraphicsState graphicsstate, GameState gamestate) { graphics = graphicsstate; System.out.println("SummaryPane gs = \t"+graphics); game = gamestate; }
 	
 	protected void paintComponent(Graphics g) {		
 		super.paintComponent(g);
-		g.clearRect(0, 0, WIDTH, HEIGHT);
+		
+		int[] data = game.getSummaryData();
+		
+		Dimension window = graphics.getSummaryPanelDimensions();
+		
+		g.clearRect(0, 0, window.width, window.height);
 		
 		g.setFont(GraphicsDriver.regular);
 		
 		//Background
 			g.setColor(new Color(186, 142, 74));
-			g.fillRect(0, 0, WIDTH, HEIGHT); //FIXME: ???
+			g.fillRect(0, 0, window.width, window.height); //FIXME: ???
 		
 		//Text
 			g.setColor(Color.BLACK);
@@ -55,9 +69,5 @@ class SummaryPane extends JPanel {
 			g.drawString("Coins: "+data[2]+" / "+GameDataLookup.MAX_CHICK_COINS, 30, initialY+(2*verticalSpacer));
 			g.drawString("Eggs: "+data[3]+" / "+GameDataLookup.MAX_EGGS, 30, initialY+(3*verticalSpacer));
 			g.drawString("S Ranks: "+data[4]+" / "+GameDataLookup.MAX_SRANKS, 30, initialY+(4*verticalSpacer));
-	}
-	
-	public void setData(int[] stateData) { data = stateData.clone(); }
-	
-	
+	}	
 }

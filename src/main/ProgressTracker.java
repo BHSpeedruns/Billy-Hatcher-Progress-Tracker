@@ -8,9 +8,9 @@ import data.GameState;
 import graphics.GraphicsDriver;
 import test.TestDriver;
 
-public class ProgressTracker {
+public final class ProgressTracker {
 	
-	private final static double VERSION = 0.6;
+	private static double VERSION = 0.6;
 	
 	
 //	private final static int FPS = 60;// Change this to affect fps of the application, currently 60.
@@ -21,15 +21,15 @@ public class ProgressTracker {
 //	private long newTime;
 	
 	
-	GraphicsDriver graphics; 
-	GameState gamestate;
-	TestDriver test;
+	private GraphicsDriver graphics = new GraphicsDriver(); 
+	private GameState gamestate = new GameState();
+	private TestDriver test = new TestDriver();
 	
 	public static void main(String[]args) { new ProgressTracker(); }
 
 	public ProgressTracker() {
 		initialize();
-		runTests();
+		//runTests();
 		runMain();
 	}
 	
@@ -37,10 +37,10 @@ public class ProgressTracker {
 		
 		checkVersion();
 		
-		graphics = new GraphicsDriver();
-		gamestate = new GameState();
+		gamestate.initialize();
+		graphics.initialize(gamestate); 
 		
-		test = new TestDriver(graphics, gamestate); //This should probably use a different gamestate
+		test.initialize(graphics, gamestate); //This should probably use a different gamestate
 		
 //		lastTime = System.nanoTime();
 	}
@@ -68,14 +68,13 @@ public class ProgressTracker {
 
 	private void runMain() { 
 		while(true) {
-			if(gamestate.isUpdated) {
-				graphics.drawFrames(gamestate);
-				gamestate.isUpdated = false;
-			}
+			//FIXME: a lock??
+			try { Thread.sleep(500); } catch(Exception e) {}
+			graphics.redrawIfNeeded();
 		}
 	}
 
-	private void runTests(){
+	private void runTests() {
 		test.testLevelUnlockSystem();
 		test.testEggHatchSystem();
 		test.testChickCoinSystem();

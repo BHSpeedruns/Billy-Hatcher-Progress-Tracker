@@ -2,9 +2,7 @@ package data;
 
 import java.util.ArrayList;
 
-public class GameState {
-	
-	public boolean isUpdated = true;
+public final class GameState {
 	
 	private int courageEmblems 	= 0;
 	
@@ -16,22 +14,22 @@ public class GameState {
 	private boolean[] eggList = new boolean[72];
 	private World[] worlds = new World[7];
 	
-	public GameState() {
+	public void initialize() {
 		for(int i = 0; i < worlds.length; i++) { worlds[i] = new World(i); }
 		getLevel(0).setState(LevelState.INCOMPLETE); //first level is accessible by default
 	}
 
-	public final int getNumCourageEmblems    (){ return courageEmblems;  }
-	public final int getNumLevelsCompleted   (){ return levelsCompleted; }
-	public final int getNumChickCoins        (){ return chickCoins;      }
-	public final int getNumEggsHatched       (){ return eggsHatched;     }
-	public final int getNumSRanks            (){ return sRanks;          }
+	public int getNumCourageEmblems    (){ return courageEmblems;  }
+	public int getNumLevelsCompleted   (){ return levelsCompleted; }
+	public int getNumChickCoins        (){ return chickCoins;      }
+	public int getNumEggsHatched       (){ return eggsHatched;     }
+	public int getNumSRanks            (){ return sRanks;          }
 	
-	public final int[] getSummaryData() { 
+	public int[] getSummaryData() { 
 		return new int[]{courageEmblems,levelsCompleted,chickCoins,eggsHatched,sRanks};
 	}
 	
-	public final void setCoinsCollected(int level, int coins) {
+	public void setCoinsCollected(int level, int coins) {
 		if(chickCoins == GameDataLookup.MAX_CHICK_COINS && coins!=5) { decrementCourageEmblems(); } //Unset "All Coins" Emblem
 		
 		chickCoins -= worlds[level/8].getLevel(level%8).getNumChickCoins();
@@ -40,13 +38,11 @@ public class GameState {
 		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { incrementCourageEmblems(); } //Set "All Coins" Emblem
 		
 		worlds[level/8].getLevel(level%8).setNumChickCoins(coins);
-		
-		isUpdated = true;
 	}
 	
-	public final Level getLevel(int level) { return worlds[level/8].getLevel(level%8); }	
+	public Level getLevel(int level) { return worlds[level/8].getLevel(level%8); }	
 	
-	public final Level[] completeLevel(int level, Rank rank) {
+	public Level[] completeLevel(int level, Rank rank) {
 		Level levelCompleted = getLevel(level);
 		
 		if(levelCompleted.getRank() != Rank.S && rank == Rank.S)      { incrementSRanks(); } //New S Rank
@@ -54,23 +50,19 @@ public class GameState {
 		
 		levelCompleted.setRank(rank);
 		
-		isUpdated = true;
-		
 		if(levelCompleted.getState() != LevelState.COMPLETE) { incrementCourageEmblems(); incrementLevelsCompleted(); }
 		return propagateLevelChange(level, LevelState.COMPLETE);
 	}
-	public final Level[] incompleteLevel(int level) {
+	public Level[] incompleteLevel(int level) {
 		Level levelCompleted = getLevel(level);
 		
 		if(levelCompleted.getRank() == Rank.S) { decrementSRanks(); }
 		levelCompleted.setRank(Rank.NORANK);
 		
-		isUpdated = true;
-		
 		decrementCourageEmblems(); decrementLevelsCompleted();
 		return propagateLevelChange(level, LevelState.INCOMPLETE);
 	}
-	private final Level[] propagateLevelChange(int level, LevelState state) {
+	private Level[] propagateLevelChange(int level, LevelState state) {
 		
 		int worldNum = level/8, levelNum = level%8;
 		ArrayList<Level> levelList = new ArrayList<Level>();
@@ -120,57 +112,48 @@ public class GameState {
 		return levelList.toArray(new Level[0]);
 	}
 	
-	public final void toggleEggHatched(int egg) {
+	public void toggleEggHatched(int egg) {
 		if(eggList[egg]) { decrementEggsHatched(); }
 		else { incrementEggsHatched(); }
 		eggList[egg] = !eggList[egg];
-		isUpdated = true;
 	}
 	
 	
 	
 	//FIXME: this duplicate style code annoys me
-	private final void incrementCourageEmblems() {
+	private void incrementCourageEmblems() {
 		courageEmblems++;
 		if(courageEmblems == GameDataLookup.MAX_EMBLEMS) { } //100% !!!
-		isUpdated = true;
 	}
-	private final void decrementCourageEmblems() {
+	private void decrementCourageEmblems() {
 		if(courageEmblems == GameDataLookup.MAX_EMBLEMS) { } //Not 100% :(
 		courageEmblems--;
-		isUpdated = true;
 	}
 	
-	private final void incrementLevelsCompleted() {
+	private void incrementLevelsCompleted() {
 		levelsCompleted++;
 		if(levelsCompleted == GameDataLookup.MAX_LEVELS) { incrementCourageEmblems(); } //Set "All Levels" Emblem
-		isUpdated = true;
 	}
-	private final void decrementLevelsCompleted() {
+	private void decrementLevelsCompleted() {
 		if(levelsCompleted == GameDataLookup.MAX_LEVELS) { decrementCourageEmblems(); } //Unset "All Levels" Emblem
 		levelsCompleted--;
-		isUpdated = true;
 	}
 	
-	private final void incrementSRanks() {
+	private void incrementSRanks() {
 		sRanks++;
 		if(sRanks == GameDataLookup.MAX_SRANKS) { incrementCourageEmblems(); } //Set "All S Ranks" Emblem
-		isUpdated = true;
 	}
-	private final void decrementSRanks() {
+	private void decrementSRanks() {
 		if(sRanks == GameDataLookup.MAX_SRANKS) { decrementCourageEmblems(); } //Unset "All S Ranks" Emblem
 		sRanks--;
-		isUpdated = true;
 	}
 	
-	private final void incrementEggsHatched() {
+	private void incrementEggsHatched() {
 		eggsHatched++; 
 		if(eggsHatched == GameDataLookup.MAX_EGGS) { incrementCourageEmblems(); } //Set "All Eggs" Emblem
-		isUpdated = true;
 	}
-	private final void decrementEggsHatched() {
+	private void decrementEggsHatched() {
 		if(eggsHatched == GameDataLookup.MAX_EGGS) { decrementCourageEmblems(); } //Unset "All Eggs" Emblem
 		eggsHatched--;
-		isUpdated = true;
 	}
 }

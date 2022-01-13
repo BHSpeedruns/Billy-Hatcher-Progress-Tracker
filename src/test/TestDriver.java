@@ -16,13 +16,12 @@ public class TestDriver {
 	GameState gamestate;
 	Random rand;
 	
-	public TestDriver(GraphicsDriver graphics,GameState gamestate) {
+	public final void initialize(GraphicsDriver graphics, GameState gamestate) {
 		this.graphics = graphics;
 		this.gamestate = gamestate;
 		rand = new Random();
 		rand.setSeed(System.nanoTime());
 	}
-	
 	
 	//This function tests the level unlock system (gamestate.completeLevel)
 	//Should generate a route through the game based off randomly picking available levels and beating them
