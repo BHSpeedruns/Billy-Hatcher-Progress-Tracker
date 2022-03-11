@@ -120,8 +120,6 @@ class LevelSelect extends JPanel{
 	GraphicsState graphics;
 	GameState game;
 
-    BufferedImage img = null;
-
 	public void initialize(GraphicsState g, GameState gm) {
 		graphics = g;
 		game = gm;
@@ -328,6 +326,9 @@ class LevelSelect extends JPanel{
 	private void worldButtonPressed(ActionEvent e, int i) { graphics.setWorldNum(i); graphics.update(); }
 	private void levelButtonPressed(ActionEvent e, int i) { graphics.setLevelNum(i); graphics.update(); } 
 
+    
+    BufferedImage img = null;
+    //TODO: move these filenames into GraphicsDriver
     private static final String[] worldNamePNGs = {
         "assets/misc/forest-village2.png",
         "assets/misc/pirates-island.png",
@@ -336,6 +337,80 @@ class LevelSelect extends JPanel{
         "assets/misc/circus-park1.png",
         "assets/misc/sand-ruin1.png",
         "assets/misc/giant-palace2.png"
+    };
+    private static final String[] eggPNGs = {
+        "assets/numbered eggs 650x650/1.png",
+        "assets/numbered eggs 650x650/2.png",
+        "assets/numbered eggs 650x650/3.png",
+        "assets/numbered eggs 650x650/4.png",
+        "assets/numbered eggs 650x650/5.png",
+        "assets/numbered eggs 650x650/6.png",
+        "assets/numbered eggs 650x650/7.png",
+        "assets/numbered eggs 650x650/8.png",
+        "assets/numbered eggs 650x650/9.png",
+        "assets/numbered eggs 650x650/10.png",
+        "assets/numbered eggs 650x650/11.png",
+        "assets/numbered eggs 650x650/12.png",
+        "assets/numbered eggs 650x650/13.png",
+        "assets/numbered eggs 650x650/14.png",
+        "assets/numbered eggs 650x650/15.png",
+        "assets/numbered eggs 650x650/16.png",
+        "assets/numbered eggs 650x650/17.png",
+        "assets/numbered eggs 650x650/18.png",
+        "assets/numbered eggs 650x650/19.png",
+        "assets/numbered eggs 650x650/20.png",
+        "assets/numbered eggs 650x650/21.png",
+        "assets/numbered eggs 650x650/22.png",
+        "assets/numbered eggs 650x650/23.png",
+        "assets/numbered eggs 650x650/24.png",
+        "assets/numbered eggs 650x650/25.png",
+        "assets/numbered eggs 650x650/26.png",
+        "assets/numbered eggs 650x650/27.png",
+        "assets/numbered eggs 650x650/28.png",
+        "assets/numbered eggs 650x650/29.png",
+        "assets/numbered eggs 650x650/30.png",
+        "assets/numbered eggs 650x650/31.png",
+        "assets/numbered eggs 650x650/32.png",
+        "assets/numbered eggs 650x650/33.png",
+        "assets/numbered eggs 650x650/34.png",
+        "assets/numbered eggs 650x650/35.png",
+        "assets/numbered eggs 650x650/36.png",
+        "assets/numbered eggs 650x650/37.png",
+        "assets/numbered eggs 650x650/38.png",
+        "assets/numbered eggs 650x650/39.png",
+        "assets/numbered eggs 650x650/40.png",
+        "assets/numbered eggs 650x650/41.png",
+        "assets/numbered eggs 650x650/42.png",
+        "assets/numbered eggs 650x650/43.png",
+        "assets/numbered eggs 650x650/44.png",
+        "assets/numbered eggs 650x650/45.png",
+        "assets/numbered eggs 650x650/46.png",
+        "assets/numbered eggs 650x650/47.png",
+        "assets/numbered eggs 650x650/48.png",
+        "assets/numbered eggs 650x650/49.png",
+        "assets/numbered eggs 650x650/50.png",
+        "assets/numbered eggs 650x650/51.png",
+        "assets/numbered eggs 650x650/52.png",
+        "assets/numbered eggs 650x650/53.png",
+        "assets/numbered eggs 650x650/54.png",
+        "assets/numbered eggs 650x650/55.png",
+        "assets/numbered eggs 650x650/56.png",
+        "assets/numbered eggs 650x650/57.png",
+        "assets/numbered eggs 650x650/58.png",
+        "assets/numbered eggs 650x650/59.png",
+        "assets/numbered eggs 650x650/60.png",
+        "assets/numbered eggs 650x650/61.png",
+        "assets/numbered eggs 650x650/62.png",
+        "assets/numbered eggs 650x650/63.png",
+        "assets/numbered eggs 650x650/64.png",
+        "assets/numbered eggs 650x650/65.png",
+        "assets/numbered eggs 650x650/66.png",
+        "assets/numbered eggs 650x650/67.png",
+        "assets/numbered eggs 650x650/68.png",
+        "assets/numbered eggs 650x650/69.png",
+        "assets/numbered eggs 650x650/70.png",
+        "assets/numbered eggs 650x650/71.png",
+        "assets/numbered eggs 650x650/72.png"
     };
 
 	protected void paintComponent(Graphics g) {		
@@ -348,15 +423,30 @@ class LevelSelect extends JPanel{
 		g.drawString("World "+(graphics.getWorldNum()+1), 30, 300);
 		g.drawString("Level "+(graphics.getLevelNum()+1), 30, 350);
 		if(graphics.getWorldNum() != -1 && graphics.getLevelNum() != -1) {
-			g.drawString(GameDataLookup.getFullLevelName(graphics.getWorldNum()*8 + graphics.getLevelNum()), 30, 400);
+            g.drawString(GameDataLookup.getFullLevelName(graphics.getWorldNum()*8 + graphics.getLevelNum()), 30, 400);
+            
+            //title of current world 
             try{
-                //read image according to current world
                 img = ImageIO.read(new File(worldNamePNGs[graphics.getWorldNum()])); 
             }
             catch(Exception e){
-                    System.out.println("Could not open file");
+                System.out.println("Could not open file");
             }            
             g.drawImage(img, 30, 30, null);
+
+            //all eggs in level
+            //TODO: can only print eggs that are in Forest levels regardless of world
+            int horizOffset = 0;
+            for(int egg : GameDataLookup.getEggsInLevel(graphics.getLevelNum())) {
+                try{
+                    img = ImageIO.read(new File(eggPNGs[egg]));
+                }
+                catch(Exception e){
+                    System.out.println("Could not open file");
+                }
+                g.drawImage(img, 30 + horizOffset, 150, null);
+                horizOffset += 50;
+            }
 		}
 		
 		//DO THE BUTTON HIGHLIGHTING
