@@ -238,36 +238,36 @@ public class GameDataLookup {
 			new int[]{20, 41, 44, 51},
 			new int[]{37, 40, 51},
 			new int[]{28, 42, 50},
-			new int[]{},//egg #20 Cipher
-			new int[]{},//egg #21 Clippen
-			new int[]{},//egg #22 Recky
-			new int[]{},//egg #23 Richie
-			new int[]{},//egg #24 Peliwan
-			new int[]{},//egg #25 Runny
-			new int[]{},//egg #26 Rabbish
+			new int[]{0, 1, 2, 4, 5, 6, 9, 11, 13, 15, 16, 18, 20, 23, 24, 25, 27, 28, 31, 32, 33, 37, 41, 44, 45, 46, 48, 51, 52, 55},//egg #20 Cipher
+			new int[]{1, 2, 4, 5, 6, 7, 8, 12, 13, 15, 16, 17, 18, 19, 20, 23, 24, 28, 32, 33, 36, 37, 41, 42, 44, 46, 48, 51, 55},//egg #21 Clippen
+			new int[]{5, 6, 7, 8, 9, 13, 16, 18, 19, 27, 34, 35, 36, 42, 46, 50},//egg #22 Recky
+			new int[]{4, 5, 6, 7, 9, 11, 13, 17, 19, 20, 23, 24, 27, 28, 36, 38, 41, 48, 49, 52, 53, 55},//egg #23 Richie
+			new int[]{17, 18, 19, 27, 28, 31, 35, 37, 40, 41, 42, 44, 45},//egg #24 Peliwan
+			new int[]{12, 15, 18, 20, 23, 38, 52},//egg #25 Runny
+			new int[]{40, 41, 45, 48, 49, 51, 52, 53, 55},//egg #26 Rabbish
 			new int[]{20, 45},
 			new int[]{6, 15},
 			new int[]{28, 37},
 			new int[]{23, 24, 49},
-			new int[]{},//egg #31 Boskus
-			new int[]{},//egg #32 Oritta
-			new int[]{},//egg #33 Biboo
-			new int[]{},//egg #34 Gorilla
-			new int[]{},//egg #35 Chameleon
+			new int[]{25, 31, 34, 37, 38, 40, 44, 46, 51, 53, 55},//egg #31 Boskus
+			new int[]{28, 31, 32, 35, 37, 40, 42, 49, 51},//egg #32 Oritta
+			new int[]{33, 36, 42, 50},//egg #33 Biboo
+			new int[]{1, 7, 17, 20, 28, 41, 55},//egg #34 Gorilla
+			new int[]{2, 6, 9, 17, 20, 31, 45, 50},//egg #35 Chameleon
 			new int[]{40},
 			new int[]{12, 19, 49},
-			new int[]{},//egg #38 Lion
+			new int[]{7, 11, 13, 18, 20, 33, 38, 42, 51},//egg #38 Lion
 			new int[]{7, 23, 46},
 			new int[]{24, 40, 42},
 			new int[]{0, 31, 44},
 			new int[]{23, 45, 49, 51},
 			new int[]{17, 25},
 			new int[]{6, 23},
-			new int[]{},//egg #45 Big Butterfly
+			new int[]{0, 5, 7, 13, 15, 17, 18, 23, 25, 27, 32, 42, 44, 48},//egg #45 Big Butterfly
 			new int[]{6, 15, 20, 28, 35, 44, 52},
-			new int[]{},//egg #47 Small Butterfly
-			new int[]{},//egg #48 1-up
-			new int[]{},//egg #49 Chick Bomb
+			new int[]{1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 15, 16, 18, 19, 20, 24, 28, 31, 32, 35, 36, 37, 38, 40, 41, 45, 46, 50, 51, 52, 53, 55},//egg #47 Small Butterfly
+			new int[]{0, 1, 2, 3, 4, 6, 7, 8, 11, 12, 13, 15, 17, 23, 33, 36, 38},//egg #48 1-up
+			new int[]{7, 9, 11, 13, 15, 18, 20, 27, 31, 37, 49, 51, 52, 53, 55},//egg #49 Chick Bomb
 			new int[]{23, 28, 35, 40, 41, 45, 53},
 			new int[]{9},
 			new int[]{33},
