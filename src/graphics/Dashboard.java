@@ -9,14 +9,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.imageio.ImageIO;
+import javax.imageio.*;
 
 import data.GameDataLookup;
 import data.GameState;
@@ -329,6 +328,16 @@ class LevelSelect extends JPanel{
 	private void worldButtonPressed(ActionEvent e, int i) { graphics.setWorldNum(i); graphics.update(); }
 	private void levelButtonPressed(ActionEvent e, int i) { graphics.setLevelNum(i); graphics.update(); } 
 
+    private static final String[] worldNamePNGs = {
+        "assets/misc/forest-village2.png",
+        "assets/misc/pirates-island.png",
+        "assets/misc/dino-mountain.png",
+        "assets/misc/blizzard-castle3.png",
+        "assets/misc/circus-park1.png",
+        "assets/misc/sand-ruin1.png",
+        "assets/misc/giant-palace2.png"
+    };
+
 	protected void paintComponent(Graphics g) {		
 		super.paintComponent(g);
 		
@@ -340,7 +349,13 @@ class LevelSelect extends JPanel{
 		g.drawString("Level "+(graphics.getLevelNum()+1), 30, 350);
 		if(graphics.getWorldNum() != -1 && graphics.getLevelNum() != -1) {
 			g.drawString(GameDataLookup.getFullLevelName(graphics.getWorldNum()*8 + graphics.getLevelNum()), 30, 400);
-            img = ImageIO.read(new File("assets/misc/forest-village2.png"));  // IOException
+            try{
+                //read image according to current world
+                img = ImageIO.read(new File(worldNamePNGs[graphics.getWorldNum()])); 
+            }
+            catch(Exception e){
+                    System.out.println("Could not open file");
+            }            
             g.drawImage(img, 30, 30, null);
 		}
 		
