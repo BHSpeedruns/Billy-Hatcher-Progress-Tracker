@@ -8,11 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.imageio.ImageIO;
 
 import data.GameDataLookup;
 import data.GameState;
@@ -116,7 +120,9 @@ class LevelSelect extends JPanel{
 	
 	GraphicsState graphics;
 	GameState game;
-	
+
+    BufferedImage img = null;
+
 	public void initialize(GraphicsState g, GameState gm) {
 		graphics = g;
 		game = gm;
@@ -334,6 +340,8 @@ class LevelSelect extends JPanel{
 		g.drawString("Level "+(graphics.getLevelNum()+1), 30, 350);
 		if(graphics.getWorldNum() != -1 && graphics.getLevelNum() != -1) {
 			g.drawString(GameDataLookup.getFullLevelName(graphics.getWorldNum()*8 + graphics.getLevelNum()), 30, 400);
+            img = ImageIO.read(new File("assets/misc/forest-village2.png"));  // IOException
+            g.drawImage(img, 30, 30, null);
 		}
 		
 		//DO THE BUTTON HIGHLIGHTING
