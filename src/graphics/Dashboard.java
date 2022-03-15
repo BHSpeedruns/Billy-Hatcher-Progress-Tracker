@@ -19,6 +19,7 @@ import javax.imageio.*;
 
 import data.GameDataLookup;
 import data.GameState;
+import data.Rank;
 
 enum WindowState { EggGallery, LevelSelect }
 
@@ -30,21 +31,35 @@ public class Dashboard extends JFrame implements MouseListener {
 	static EggGallery eggGallery = new EggGallery();
 	static LevelSelect levelSelect = new LevelSelect();
 	
+	public static BufferedImage[] smallEggPngs = new BufferedImage[72];
+	
 	public void initialize(GraphicsState g, GameState gm) {
 		graphics = g;
 		game = gm;
 		eggGallery.initialize(graphics,game);
 		levelSelect.initialize(graphics,game);
+		initializeFrame();
+		initializeData();
 		
+	}
+	
+	private void initializeFrame() {
 		setTitle("Billy Hatcher 100% Progress Tracker");
 		pack();
 		add(eggGallery);
 		add(levelSelect);
-		setSize(g.getDashboardDimensions());
+		setSize(graphics.getDashboardDimensions());
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setLocationRelativeTo(null);
+	}
+	
+	private void initializeData() {
+		for(int i = 1; i <= 72; i++) {
+			try { smallEggPngs[i-1] = ImageIO.read(new File("assets/Egg PNGs/Numbered/"+i+".png")); } 
+			catch(Exception e) { System.out.println("Failed to load numbered egg pngs"); }
+		}
 	}
 	
 	public void update() { 
@@ -120,11 +135,21 @@ class LevelSelect extends JPanel{
 	GraphicsState graphics;
 	GameState game;
 
-    BufferedImage img = null;
+    BufferedImage[] worldNames = new BufferedImage[7];
+    BufferedImage[] rankIcons = new BufferedImage[5];
+    BufferedImage checkmark, chickCoin;
+    
+    
 
 	public void initialize(GraphicsState g, GameState gm) {
 		graphics = g;
 		game = gm;
+		
+		initializeFrame();
+		initializeData();
+	}
+	
+	private void initializeFrame() {
 		
 		JButton eggGalleryButton = new JButton();
         eggGalleryButton.setText("Egg Gallery");
@@ -323,20 +348,34 @@ class LevelSelect extends JPanel{
                     .addComponent(giantPalaceButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 	}
-
-	private void eggGalleryButtonPressed(ActionEvent e) { graphics.setScreen(WindowState.EggGallery); graphics.update(); }
-	private void worldButtonPressed(ActionEvent e, int i) { graphics.setWorldNum(i); graphics.update(); }
-	private void levelButtonPressed(ActionEvent e, int i) { graphics.setLevelNum(i); graphics.update(); } 
-
-    private static final String[] worldNamePNGs = {
-        "assets/misc/forest-village2.png",
-        "assets/misc/pirates-island.png",
-        "assets/misc/dino-mountain.png",
-        "assets/misc/blizzard-castle3.png",
-        "assets/misc/circus-park1.png",
-        "assets/misc/sand-ruin1.png",
-        "assets/misc/giant-palace2.png"
-    };
+	private void initializeData() {
+		final String[] worldNamePNGs = {
+		        "forest-village2",
+		        "pirates-island",
+		        "dino-mountain",
+		        "blizzard-castle3",
+		        "circus-park1",
+		        "sand-ruin1",
+		        "giant-palace2"
+		};
+		
+		for(int i = 0; i < 7; i++) {
+			try { worldNames[i] = ImageIO.read(new File("assets/misc/"+worldNamePNGs[i]+".png")); } 
+			catch(Exception e) { System.out.println("Failed to load world name image"); }
+		}
+		
+		for(int i = 0; i < 5; i++) {
+			try { rankIcons[i] = ImageIO.read(new File("assets/misc/"+(Rank.values()[i+1].name())+"-rank.png")); }
+			catch(Exception e) { System.out.println("Failed to load rank icons"); }
+		}
+		
+		try { checkmark = ImageIO.read(new File("assets/misc/checkmark.png")); }
+		catch(Exception e) { System.out.println("Failed to load checkmark image"); }
+		
+		try { chickCoin = ImageIO.read(new File("assets/misc/temporarychickcoin.png")); }
+		catch(Exception e) { System.out.println("Failed to load chick coin image"); }
+		
+	}
 
 	protected void paintComponent(Graphics g) {		
 		super.paintComponent(g);
@@ -347,20 +386,83 @@ class LevelSelect extends JPanel{
 		g.setColor(Color.WHITE);
 		g.drawString("World "+(graphics.getWorldNum()+1), 30, 300);
 		g.drawString("Level "+(graphics.getLevelNum()+1), 30, 350);
+		
+		
 		if(graphics.getWorldNum() != -1 && graphics.getLevelNum() != -1) {
-			g.drawString(GameDataLookup.getFullLevelName(graphics.getWorldNum()*8 + graphics.getLevelNum()), 30, 400);
-            try{
-                //read image according to current world
-                img = ImageIO.read(new File(worldNamePNGs[graphics.getWorldNum()])); 
-            }
-            catch(Exception e){
-                    System.out.println("Could not open file");
-            }            
-            g.drawImage(img, 30, 30, null);
+			drawLevelInfo(g);            
 		}
 		
 		//DO THE BUTTON HIGHLIGHTING
 		
 	}
+	
+	private void drawLevelInfo(Graphics g) {
+		
+		//***********TESTING CODE***********//
+		
+		/*
+			game.getLevel(1).setRank(Rank.D); //forest 2
+			game.getLevel(2).setRank(Rank.C);
+			game.getLevel(3).setRank(Rank.B);
+			game.getLevel(4).setRank(Rank.A);
+			game.getLevel(5).setRank(Rank.S);
+			
+			game.setEggHatched(2,true); // Lightning Comb (seen on forest 5)
+			
+			game.getLevel(1).setChickCoin(0,true);
+			game.getLevel(2).setChickCoin(1,true);
+			game.getLevel(3).setChickCoin(2,true);
+			game.getLevel(4).setChickCoin(3,true);
+			game.getLevel(5).setChickCoin(4,true);
+			
+			game.getLevel(0).setChickCoins(new boolean[] {true,true,true,true,true});
+		
+		*/
+		
+		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+
+		//Draw World & Level Information
+			g.drawString(GameDataLookup.getFullLevelName(levelIndex), 30, 400);
+			//FIXME: fixed width w/ constants etc.
+			g.drawImage(worldNames[world], 30, 30, null);
+		
+		//Draw Rank
+			final int rankStartX = 600, rankStartY = 85, rankWidth = 64, rankHeight = 64;
+			final Rank rank = game.getLevel(levelIndex).getRank();
+			g.setColor(Color.WHITE);
+			g.drawRect(rankStartX, rankStartY, rankWidth, rankHeight);
+			if(rank!=Rank.NORANK) { //TODO: These rank images don't fit the box well
+				//TODO: probably not best to use the ordinal index. Maybe add methods to go both ways in Rank
+				g.drawImage(rankIcons[rank.ordinal() - 1], rankStartX, rankStartY, rankWidth, rankHeight, null);
+			}
+		
+		//Draw Coins
+			final int coinStartX = 675, coinStartY = 85, coinWidth = 64, coinHeight = 64;
+			final boolean[] coins = game.getLevel(levelIndex).getChickCoins();
+			g.setColor(Color.WHITE);
+			for(int i = 0; i < 5; i++) { //TODO: I didn't have the chick coin image on hand, we need to update it
+				g.drawRect(coinStartX+i*coinWidth, coinStartY, coinWidth, coinHeight);
+				if(coins[i]) { g.drawImage(chickCoin, coinStartX+i*coinWidth, coinStartY, coinWidth, coinHeight, null); }
+			}
+			
+		//Draw Eggs
+			final int[] eggsToDraw = GameDataLookup.getEggsInLevel(levelIndex);
+			final int eggStartX = 30, eggStartY = 160, eggWidth = 64, eggHeight = 64;
+			
+			g.setColor(Color.WHITE);
+			for(int i = 0; i<eggsToDraw.length; i++) {
+				g.drawImage(Dashboard.smallEggPngs[eggsToDraw[i]], eggStartX + i*eggWidth, eggStartY, eggWidth, eggHeight, null);
+				g.drawRect(eggStartX + i*eggWidth, eggStartY, eggWidth, eggHeight);
+				if(game.getEggHatched(eggsToDraw[i])) { //TODO: this checkmark looks awful lol, extremely temporary
+					g.drawImage(checkmark,eggStartX + i*eggWidth,eggStartY,eggWidth,eggHeight,null);
+				}
+			}
+		
+	}
+	
+	
+	private void eggGalleryButtonPressed(ActionEvent e) { graphics.setScreen(WindowState.EggGallery); graphics.update(); }
+	private void worldButtonPressed(ActionEvent e, int i) { graphics.setWorldNum(i); graphics.update(); }
+	private void levelButtonPressed(ActionEvent e, int i) { graphics.setLevelNum(i); graphics.update(); } 
 }
 

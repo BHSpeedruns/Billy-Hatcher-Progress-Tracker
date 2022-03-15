@@ -2,19 +2,27 @@ package data;
 
 public class Level {
 	private int			ID;
-	private int 		chickCoinsCollected;
+	private boolean[] 	chickCoinsCollected = new boolean[5];
 	private Rank 		highestRank;
 	private LevelState 	completionState;
 	
 	public Level(int ID) {
 		this.ID					= 	ID;
-		chickCoinsCollected 	= 	0;
 		highestRank 			= 	Rank.NORANK;
 		completionState 		= 	LevelState.INACCESSIBLE;
 	}
 	
-	public int getNumChickCoins    ()                { return chickCoinsCollected; }
-	public void setNumChickCoins   (int coins)       { chickCoinsCollected = coins; }
+	public int getNumChickCoins() { 
+		int number = 0;
+		for(boolean coin : chickCoinsCollected) { if(coin) { number++; } }
+		return number;
+	}
+	
+	public void setChickCoin       (int c, boolean v){ chickCoinsCollected[c] = v; }
+	public void toggleChickCoin    (int coin)        { chickCoinsCollected[coin] = !chickCoinsCollected[coin]; }
+	public void setChickCoins      (boolean[] coins) { chickCoinsCollected = coins; }
+	public boolean getChickCoins   (int coin)        { return chickCoinsCollected[coin]; }
+	public boolean[] getChickCoins ()				 { return chickCoinsCollected; }
 	public Rank getRank            ()                { return highestRank; }
 	public void setRank            (Rank rank)       { highestRank = rank; } 
 	public LevelState getState     ()                { return completionState; }

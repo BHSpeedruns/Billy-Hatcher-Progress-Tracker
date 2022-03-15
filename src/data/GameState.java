@@ -29,15 +29,18 @@ public final class GameState {
 		return new int[]{courageEmblems,levelsCompleted,chickCoins,eggsHatched,sRanks};
 	}
 	
-	public void setCoinsCollected(int level, int coins) {
-		if(chickCoins == GameDataLookup.MAX_CHICK_COINS && coins!=5) { decrementCourageEmblems(); } //Unset "All Coins" Emblem
+	public void setCoinsCollected(int level, boolean[] coins) {
+		int numCoins = 0;
+		for(boolean coin : coins) { if(coin) { numCoins++; } }
+		
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS && numCoins!=5) { decrementCourageEmblems(); } //Unset "All Coins" Emblem
 		
 		chickCoins -= worlds[level/8].getLevel(level%8).getNumChickCoins();
-		chickCoins += coins;
+		chickCoins += numCoins;
 		
 		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { incrementCourageEmblems(); } //Set "All Coins" Emblem
 		
-		worlds[level/8].getLevel(level%8).setNumChickCoins(coins);
+		worlds[level/8].getLevel(level%8).setChickCoins(coins);
 	}
 	
 	public Level getLevel(int level) { return worlds[level/8].getLevel(level%8); }	
@@ -112,13 +115,14 @@ public final class GameState {
 		return levelList.toArray(new Level[0]);
 	}
 	
+	
+	public boolean getEggHatched(int egg) { return eggList[egg]; }
+	public void setEggHatched(int egg, boolean hatched) { eggList[egg] = hatched; }
 	public void toggleEggHatched(int egg) {
 		if(eggList[egg]) { decrementEggsHatched(); }
 		else { incrementEggsHatched(); }
 		eggList[egg] = !eggList[egg];
 	}
-	
-	
 	
 	//FIXME: this duplicate style code annoys me
 	private void incrementCourageEmblems() {
