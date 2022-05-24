@@ -99,7 +99,7 @@ public class TestDriver {
 			int level = levelsLeft.get(index).getID();
 			
 			System.out.println("Collecting 5 Coins on ("+((level/8)+1)+"-"+((level%8)+1)+") "+GameDataLookup.getLevelName(level));
-			gamestate.setCoinsCollected(level,5);
+			gamestate.setCoinsCollected(level,new boolean[]{true,true,true,true,true});
 			
 			System.out.println(gamestate.getNumChickCoins()+" coins collected, "+gamestate.getNumCourageEmblems()+" emblems\n");
 			
