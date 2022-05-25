@@ -15,6 +15,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 import javax.imageio.*;
 
 import data.GameDataLookup;
@@ -126,6 +127,8 @@ class EggGallery extends JPanel{
 	
 	protected void paintComponent(Graphics g) {		
 		super.paintComponent(g);
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, 800, 600);
 		//TODO:Content
 	}
 }
@@ -139,7 +142,7 @@ class LevelSelect extends JPanel{
     BufferedImage[] rankIcons = new BufferedImage[5];
     BufferedImage checkmark, chickCoin;
     
-    
+    static ChickCoin[] chickCoins = new ChickCoin[5]; 
 
 	public void initialize(GraphicsState g, GameState gm) {
 		graphics = g;
@@ -347,6 +350,11 @@ class LevelSelect extends JPanel{
                     .addComponent(circusParkButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(giantPalaceButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
+        
+        for(int i = 0; i < 5; i++) {
+			chickCoins[i] = new ChickCoin(game, graphics, i);
+			this.add("ChickCoinButton#"+(i+1),chickCoins[i]);
+		}
 	}
 	private void initializeData() {
 		final String[] worldNamePNGs = {
@@ -372,9 +380,6 @@ class LevelSelect extends JPanel{
 		try { checkmark = ImageIO.read(new File("assets/misc/checkmark.png")); }
 		catch(Exception e) { System.out.println("Failed to load checkmark image"); }
 		
-		try { chickCoin = ImageIO.read(new File("assets/misc/temporarychickcoin.png")); }
-		catch(Exception e) { System.out.println("Failed to load chick coin image"); }
-		
 	}
 
 	protected void paintComponent(Graphics g) {		
@@ -388,8 +393,13 @@ class LevelSelect extends JPanel{
 		g.drawString("Level "+(graphics.getLevelNum()+1), 30, 350);
 		
 		
+		//TODO: somewhat stupid to do this. Marked true in drawLevelInfo.
+		for(int i=0;i<5;i++) {
+			chickCoins[i].setVisible(false);
+		}
+		
 		if(graphics.getWorldNum() != -1 && graphics.getLevelNum() != -1) {
-			drawLevelInfo(g);            
+			drawLevelInfo(g);
 		}
 		
 		//DO THE BUTTON HIGHLIGHTING
@@ -437,12 +447,10 @@ class LevelSelect extends JPanel{
 			}
 		
 		//Draw Coins
-			final int coinStartX = 675, coinStartY = 85, coinWidth = 64, coinHeight = 64;
-			final boolean[] coins = game.getLevel(levelIndex).getChickCoins();
 			g.setColor(Color.WHITE);
-			for(int i = 0; i < 5; i++) { //TODO: I didn't have the chick coin image on hand, we need to update it
-				g.drawRect(coinStartX+i*coinWidth, coinStartY, coinWidth, coinHeight);
-				if(coins[i]) { g.drawImage(chickCoin, coinStartX+i*coinWidth, coinStartY, coinWidth, coinHeight, null); }
+			for(int i = 0; i < 5; i++) {
+				chickCoins[i].setVisible(true);
+				chickCoins[i].paintComponent(g);
 			}
 			
 		//Draw Eggs
@@ -466,3 +474,69 @@ class LevelSelect extends JPanel{
 	private void levelButtonPressed(ActionEvent e, int i) { graphics.setLevelNum(i); graphics.update(); } 
 }
 
+class ChickCoin extends JButton {
+	
+	static BufferedImage coinImage;
+	
+	final int coinStartX = 675, coinStartY = 85, coinWidth = 64, coinHeight = 64;
+	
+	int coinNum;
+	GameState game;
+	GraphicsState graphics;
+	
+	ChickCoin(GameState gm, GraphicsState gr, int num) { 
+		super.setContentAreaFilled(false);
+		
+		game = gm; 
+		graphics = gr; 
+		coinNum = num; 
+		
+		if(coinImage == null) {
+			try { coinImage = ImageIO.read(new File("assets/misc/temporarychickcoin.png")); } //TODO: I didn't have the chick coin image on hand, we need to update it
+			catch(Exception e) { System.out.println("Failed to load chick coin image"); }
+		}
+		
+		this.setBounds(coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight);
+		
+		this.addActionListener(new ActionListener() {
+			
+	    	public void actionPerformed(ActionEvent e) {
+	    		coinPressed(e);
+	    	}
+	    });
+		
+		this.setToolTipText("");
+	}
+	
+	protected void coinPressed(ActionEvent e) {
+		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+		if(game.getLevel(levelIndex).getChickCoins()[coinNum]) {
+			game.getLevel(levelIndex).setChickCoin(coinNum, false);
+		}
+		else {
+			game.getLevel(levelIndex).setChickCoin(coinNum, true);
+		}
+	}
+
+	protected void paintComponent(Graphics g) {
+		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+		
+		super.paintComponent(g);
+		
+		//FIXME: should be more on top somehow, seems to only do the bottom and right sides, jbutton default offset messes up top & left. Probably a bounds reduction
+		g.drawRect(coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight); 
+		
+		if(game.getLevel(levelIndex).getChickCoins()[coinNum]) { g.drawImage(coinImage, coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight, null); }
+	}
+	
+	public String getToolTipText(MouseEvent evt){
+        ToolTipManager.sharedInstance().setInitialDelay(100);
+        ToolTipManager.sharedInstance().setDismissDelay(60000);
+
+        final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+        
+        if(level < 0) {return "";}
+        
+        return GameDataLookup.chickCoinNotes[levelIndex][coinNum];
+    }
+}

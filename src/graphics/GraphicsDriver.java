@@ -24,7 +24,8 @@ public final class GraphicsDriver {
 	}
 	private void initializeResources() {
 		try {
-			int x = 1/0; //FIXME: Super Dumb
+			if(true) {throw new Exception();} //FIXME: temporary stupidity
+			
 			regular = Font.createFont(0,new File("assets/fonts/regular.ttf"));
 			regular.deriveFont(1,18);
 		}
