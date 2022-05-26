@@ -142,7 +142,8 @@ class LevelSelect extends JPanel{
     BufferedImage[] rankIcons = new BufferedImage[5];
     BufferedImage checkmark, chickCoin;
     
-    static ChickCoin[] chickCoins = new ChickCoin[5]; 
+    static ChickCoin[] chickCoins = new ChickCoin[GameDataLookup.NUM_COINS_PER_LEVEL];
+    static Egg[] eggs = new Egg[GameDataLookup.MAX_EGGS_PER_LEVEL];
 
 	public void initialize(GraphicsState g, GameState gm) {
 		graphics = g;
@@ -351,10 +352,15 @@ class LevelSelect extends JPanel{
                     .addComponent(giantPalaceButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < GameDataLookup.NUM_COINS_PER_LEVEL; i++) {
 			chickCoins[i] = new ChickCoin(game, graphics, i);
 			this.add("ChickCoinButton#"+(i+1),chickCoins[i]);
 		}
+        
+        for(int i = 0; i < GameDataLookup.MAX_EGGS_PER_LEVEL; i++) {
+        	eggs[i] = new Egg(game, graphics, i);
+        	this.add("EggButton#"+(i+1),eggs[i]);
+        }
 	}
 	private void initializeData() {
 		final String[] worldNamePNGs = {
@@ -377,9 +383,6 @@ class LevelSelect extends JPanel{
 			catch(Exception e) { System.out.println("Failed to load rank icons"); }
 		}
 		
-		try { checkmark = ImageIO.read(new File("assets/misc/checkmark.png")); }
-		catch(Exception e) { System.out.println("Failed to load checkmark image"); }
-		
 		
 		//***********TESTING CODE***********//
 			/*for(int i=0;i<55;i++) {
@@ -399,9 +402,13 @@ class LevelSelect extends JPanel{
 		g.drawString("Level "+(graphics.getLevelNum()+1), 30, 350);
 		
 		
-		//TODO: somewhat stupid to do this. Marked true in drawLevelInfo.
-		for(int i=0;i<5;i++) {
+		//TODO: somewhat stupid to do this. Marked true in painting
+		for(int i=0;i< GameDataLookup.NUM_COINS_PER_LEVEL; i++) {
 			chickCoins[i].setVisible(false);
+		}
+		
+		for(int i=0;i<GameDataLookup.MAX_EGGS_PER_LEVEL;i++) {
+			eggs[i].setVisible(false);
 		}
 		
 		if(graphics.getWorldNum() != -1 && graphics.getLevelNum() != -1) {
@@ -432,22 +439,16 @@ class LevelSelect extends JPanel{
 		
 		//Draw Coins
 			g.setColor(Color.WHITE);
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < GameDataLookup.NUM_COINS_PER_LEVEL; i++) {
 				chickCoins[i].setVisible(true);
 				chickCoins[i].paintComponent(g);
 			}
 			
 		//Draw Eggs
-			final int[] eggsToDraw = GameDataLookup.getEggsInLevel(levelIndex);
-			final int eggStartX = 30, eggStartY = 160, eggWidth = 64, eggHeight = 64;
 			
 			g.setColor(Color.WHITE);
-			for(int i = 0; i<eggsToDraw.length; i++) {
-				g.drawImage(Dashboard.smallEggPngs[eggsToDraw[i]], eggStartX + i*eggWidth, eggStartY, eggWidth, eggHeight, null);
-				g.drawRect(eggStartX + i*eggWidth, eggStartY, eggWidth, eggHeight);
-				if(game.getEggHatched(eggsToDraw[i])) { //TODO: this checkmark looks awful lol, extremely temporary
-					g.drawImage(checkmark,eggStartX + i*eggWidth,eggStartY,eggWidth,eggHeight,null);
-				}
+			for(int i = 0; i < GameDataLookup.MAX_EGGS_PER_LEVEL; i++) {
+				eggs[i].paintComponent(g);
 			}
 		
 	}
@@ -519,8 +520,73 @@ class ChickCoin extends JButton {
 
         final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
         
-        if(level < 0) {return "";}
+        if(levelIndex < 0) {return "";}
         
         return GameDataLookup.chickCoinNotes[levelIndex][coinNum];
     }
+}
+
+class Egg extends JButton {
+	
+	final int eggStartX = 30, eggStartY = 160, eggWidth = 64, eggHeight = 64;
+	
+	static BufferedImage checkmark;
+	
+	int eggNum;
+	GameState game;
+	GraphicsState graphics;
+	
+	Egg(GameState gm, GraphicsState gr, int num) { 
+		super.setContentAreaFilled(false);
+		
+		game = gm; 
+		graphics = gr; 
+		eggNum = num; 
+		
+		if(checkmark == null) {
+			try { checkmark = ImageIO.read(new File("assets/misc/checkmark.png")); }
+			catch(Exception e) { System.out.println("Failed to load checkmark image"); }
+		}
+		
+		this.setBounds(eggStartX+eggNum*eggWidth, eggStartY, eggWidth, eggHeight);
+		
+		this.addActionListener(new ActionListener() {
+			
+	    	public void actionPerformed(ActionEvent e) {
+	    		eggPressed(e);
+	    	}
+	    });
+	}
+	
+	protected void eggPressed(ActionEvent e) {
+		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+		try {
+			game.toggleEggHatched(GameDataLookup.getEggsInLevel(levelIndex)[eggNum]);
+		}
+		catch(Exception noegg) {
+			//there are not this many eggs in the level
+		}
+	}
+
+	protected void paintComponent(Graphics g) {
+		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+		if(levelIndex < 0) { return; }
+		
+		final int[] eggsToDraw = GameDataLookup.getEggsInLevel(levelIndex);
+		
+		if(eggNum > eggsToDraw.length -1 ) { return; }
+		
+		this.setVisible(true);
+		super.paintComponent(g);
+		
+		g.setColor(Color.WHITE);
+		g.drawImage(Dashboard.smallEggPngs[eggsToDraw[eggNum]], eggStartX + eggNum*eggWidth, eggStartY, eggWidth, eggHeight, null);
+		
+		//FIXME: should be more on top somehow, seems to only do the bottom and right sides, jbutton default offset messes up top & left. Probably a bounds reduction
+		g.drawRect(eggStartX + eggNum*eggWidth, eggStartY, eggWidth, eggHeight);
+		
+		if(game.getEggHatched(eggsToDraw[eggNum])) { //TODO: this checkmark looks awful lol, extremely temporary
+			g.drawImage(checkmark,eggStartX + eggNum*eggWidth,eggStartY,eggWidth,eggHeight,null);
+		}
+	}
 }

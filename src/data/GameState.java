@@ -29,6 +29,7 @@ public final class GameState {
 		return new int[]{courageEmblems,levelsCompleted,chickCoins,eggsHatched,sRanks};
 	}
 	
+	//TODO: probably should just do toggle coin collected like eggs for the actual tracker
 	public void setCoinsCollected(int level, boolean[] coins) {
 		int numCoins = 0;
 		for(boolean coin : coins) { if(coin) { numCoins++; } }
