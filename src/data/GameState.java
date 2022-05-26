@@ -38,9 +38,26 @@ public final class GameState {
 		chickCoins -= worlds[level/8].getLevel(level%8).getNumChickCoins();
 		chickCoins += numCoins;
 		
+		//FIXME: I am not convinced of this logic. Technically works cause all buttons are toggles and this is just for testing?
 		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { incrementCourageEmblems(); } //Set "All Coins" Emblem
 		
 		worlds[level/8].getLevel(level%8).setChickCoins(coins);
+	}
+	
+	public void setCoinCollected(int level, int coin, boolean value) {
+		
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS && !value) { decrementCourageEmblems(); } //Unset "All Coins" Emblem
+		
+		if(value && !worlds[level/8].getLevel(level%8).getChickCoin(coin)) {
+			chickCoins++;
+		}
+		else if(!value && worlds[level/8].getLevel(level%8).getChickCoin(coin) ) {
+			chickCoins--;
+		}
+		
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { incrementCourageEmblems(); } //Set "All Coins" Emblem
+		
+		worlds[level/8].getLevel(level%8).setChickCoin(coin,value);
 	}
 	
 	public Level getLevel(int level) { return worlds[level/8].getLevel(level%8); }	

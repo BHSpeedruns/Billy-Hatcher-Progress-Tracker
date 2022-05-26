@@ -21,7 +21,7 @@ public class Level {
 	public void setChickCoin       (int c, boolean v){ chickCoinsCollected[c] = v; }
 	public void toggleChickCoin    (int coin)        { chickCoinsCollected[coin] = !chickCoinsCollected[coin]; }
 	public void setChickCoins      (boolean[] coins) { chickCoinsCollected = coins; }
-	public boolean getChickCoins   (int coin)        { return chickCoinsCollected[coin]; }
+	public boolean getChickCoin   (int coin)        { return chickCoinsCollected[coin]; }
 	public boolean[] getChickCoins ()				 { return chickCoinsCollected; }
 	public Rank getRank            ()                { return highestRank; }
 	public void setRank            (Rank rank)       { highestRank = rank; } 

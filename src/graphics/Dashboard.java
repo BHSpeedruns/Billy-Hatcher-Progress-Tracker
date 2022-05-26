@@ -380,6 +380,12 @@ class LevelSelect extends JPanel{
 		try { checkmark = ImageIO.read(new File("assets/misc/checkmark.png")); }
 		catch(Exception e) { System.out.println("Failed to load checkmark image"); }
 		
+		
+		//***********TESTING CODE***********//
+			/*for(int i=0;i<55;i++) {
+				game.setCoinsCollected(i, new boolean[] {true,true,true,true,true});
+			}*/
+		
 	}
 
 	protected void paintComponent(Graphics g) {		
@@ -407,28 +413,6 @@ class LevelSelect extends JPanel{
 	}
 	
 	private void drawLevelInfo(Graphics g) {
-		
-		//***********TESTING CODE***********//
-		
-		/*
-			game.getLevel(1).setRank(Rank.D); //forest 2
-			game.getLevel(2).setRank(Rank.C);
-			game.getLevel(3).setRank(Rank.B);
-			game.getLevel(4).setRank(Rank.A);
-			game.getLevel(5).setRank(Rank.S);
-			
-			game.setEggHatched(2,true); // Lightning Comb (seen on forest 5)
-			
-			game.getLevel(1).setChickCoin(0,true);
-			game.getLevel(2).setChickCoin(1,true);
-			game.getLevel(3).setChickCoin(2,true);
-			game.getLevel(4).setChickCoin(3,true);
-			game.getLevel(5).setChickCoin(4,true);
-			
-			game.getLevel(0).setChickCoins(new boolean[] {true,true,true,true,true});
-		
-		*/
-		
 		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
 
 		//Draw World & Level Information
@@ -511,10 +495,10 @@ class ChickCoin extends JButton {
 	protected void coinPressed(ActionEvent e) {
 		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
 		if(game.getLevel(levelIndex).getChickCoins()[coinNum]) {
-			game.getLevel(levelIndex).setChickCoin(coinNum, false);
+			game.setCoinCollected(levelIndex, coinNum, false);
 		}
 		else {
-			game.getLevel(levelIndex).setChickCoin(coinNum, true);
+			game.setCoinCollected(levelIndex, coinNum, true);
 		}
 	}
 
