@@ -159,7 +159,7 @@ public class GameDataLookup {
 
 	public static final int MAX_EGGS_PER_LEVEL = 16;
 	private static final int[][] eggsInLevels = {
-			new int[]{19, 40, 44, 47, 58, 65, 66},
+			new int[]{19, 40, 44, 47, 58, 65, 66},//Forest 1
 			new int[]{4, 19, 20, 33, 46, 47},
 			new int[]{0, 1, 10, 19, 20, 34, 46, 47},
 			new int[]{47},
@@ -167,7 +167,7 @@ public class GameDataLookup {
 			new int[]{0, 2, 4, 7, 15, 19, 20, 21, 22, 44, 46},
 			new int[]{3, 19, 20, 21, 22, 27, 34, 43, 45, 46, 47},
 			new int[]{12, 19, 21, 22, 33, 37, 38, 44, 46, 47, 48, 57},
-			new int[]{0, 19, 21, 46, 47, 67},
+			new int[]{0, 19, 21, 46, 47, 67},//Pirate 1
 			new int[]{3, 20, 21, 22, 34, 46, 48, 50},
 			new int[]{},
 			new int[]{1, 20, 22, 37, 46, 47, 48},
@@ -175,15 +175,15 @@ public class GameDataLookup {
 			new int[]{5, 15, 19, 20, 21, 22, 37, 44, 46, 47, 48},
 			new int[]{11},
 			new int[]{1, 8, 12, 14, 19, 20, 24, 27, 44, 45, 46, 47, 48, 63},
-			new int[]{5, 19, 20, 21, 46, 68},
-			new int[]{4, 20, 22, 23, 33, 34, 42, 44, 47, 53},
+			new int[]{5, 19, 20, 21, 46, 68},//Dino 1
+			new int[]{4, 20, 22, 23, 33, 34, 42, 44, 47, 52},
 			new int[]{0, 10, 19, 20, 21, 23, 24, 37, 44, 46, 48, 55},
 			new int[]{6, 20, 21, 22, 23, 36, 46},
 			new int[]{7, 16, 19, 20, 22, 24, 26, 33, 34, 37, 45, 46, 48},
 			new int[]{},
 			new int[]{},
 			new int[]{19, 20, 22, 24, 29, 38, 41, 43, 44, 47, 49},
-			new int[]{5, 19, 20, 22, 29, 39, 46, 69},
+			new int[]{5, 19, 20, 22, 29, 39, 46, 69},//Blizzard 1
 			new int[]{19, 30, 42, 44, 59},
 			new int[]{54},
 			new int[]{2, 19, 21, 22, 23, 44, 48},
@@ -191,7 +191,7 @@ public class GameDataLookup {
 			new int[]{},
 			new int[]{11},
 			new int[]{3, 15, 19, 23, 30, 31, 34, 40, 46, 48},
-			new int[]{0, 7, 19, 20, 31, 44, 46, 70},
+			new int[]{0, 7, 19, 20, 31, 44, 46, 70},//Circus 1
 			new int[]{19, 20, 32, 37, 47, 51},
 			new int[]{21, 30},
 			new int[]{13, 21, 23, 31, 46, 49, 62},
@@ -199,7 +199,7 @@ public class GameDataLookup {
 			new int[]{0, 11, 17, 19, 20, 23, 28, 30, 31, 45, 46, 48},
 			new int[]{3, 10, 12, 15, 22, 24, 30, 37, 46, 47},
 			new int[]{},
-			new int[]{0, 17, 23, 25, 30, 31, 35, 39, 46, 49, 71},
+			new int[]{0, 17, 23, 25, 30, 31, 35, 39, 46, 49, 71},//Sand 1
 			new int[]{3, 16, 18, 19, 20, 22, 23, 25, 33, 46, 53},
 			new int[]{4, 20, 21, 23, 32, 31, 37, 39, 44},
 			new int[]{},
@@ -207,7 +207,7 @@ public class GameDataLookup {
 			new int[]{2, 9, 19, 23, 25, 26, 34, 41, 46, 49},
 			new int[]{13, 19, 20, 21, 30, 38, 46},
 			new int[]{},
-			new int[]{5, 19, 20, 22, 25, 44},
+			new int[]{5, 19, 20, 22, 25, 44},//Palace 1
 			new int[]{0, 22, 25, 29, 31, 36, 41, 48},
 			new int[]{1, 3, 18, 21, 32, 34, 46},
 			new int[]{12, 16, 17, 19, 20, 25, 30, 31, 37, 41, 46, 48, 61},
@@ -220,79 +220,79 @@ public class GameDataLookup {
 	public static final int[] getEggsInLevel(int levelID) { return eggsInLevels[levelID]; }
 	
 	private static final int[][] eggLocations = {
-			new int[]{2, 5, 8, 12, 18, 32, 37, 40, 49},
-			new int[]{2, 11, 15, 28, 50},
-			new int[]{5, 27, 44, 45, 52},
-			new int[]{6, 9, 31, 38, 41, 50},
-			new int[]{1, 5, 17, 42, 53},
-			new int[]{13, 16, 24, 48, 55},
-			new int[]{19, 52, 55},
-			new int[]{5, 20, 40, 52},
-			new int[]{15, 28},
-			new int[]{45},
-			new int[]{2, 18, 36, 38},
-			new int[]{14, 30, 45},
-			new int[]{7, 15, 38, 51},
-			new int[]{35, 46},
-			new int[]{4, 12, 15, 44},
-			new int[]{5, 13, 31, 38},
-			new int[]{20, 41, 44, 51},
-			new int[]{37, 40, 51},
-			new int[]{28, 42, 50},
-			new int[]{},//egg #20 Cipher
-			new int[]{},//egg #21 Clippen
-			new int[]{},//egg #22 Recky
-			new int[]{},//egg #23 Richie
-			new int[]{},//egg #24 Peliwan
-			new int[]{},//egg #25 Runny
-			new int[]{},//egg #26 Rabbish
-			new int[]{20, 45},
-			new int[]{6, 15},
-			new int[]{28, 37},
-			new int[]{23, 24, 49},
-			new int[]{},//egg #31 Boskus
-			new int[]{},//egg #32 Oritta
-			new int[]{},//egg #33 Biboo
-			new int[]{},//egg #34 Gorilla
-			new int[]{},//egg #35 Chameleon
-			new int[]{40},
-			new int[]{12, 19, 49},
-			new int[]{},//egg #38 Lion
-			new int[]{7, 23, 46},
-			new int[]{24, 40, 42},
-			new int[]{0, 31, 44},
-			new int[]{23, 45, 49, 51},
-			new int[]{17, 25},
-			new int[]{6, 23},
-			new int[]{},//egg #45 Big Butterfly
-			new int[]{6, 15, 20, 28, 35, 44, 52},
-			new int[]{},//egg #47 Small Butterfly
-			new int[]{},//egg #48 1-up
-			new int[]{},//egg #49 Chick Bomb
-			new int[]{23, 28, 35, 40, 41, 45, 53},
-			new int[]{9},
-			new int[]{33},
-			new int[]{17},
-			new int[]{41},
-			new int[]{26},
-			new int[]{18},
-			new int[]{44},
-			new int[]{7},
-			new int[]{0},
-			new int[]{25},
-			new int[]{12},
-			new int[]{51},
-			new int[]{35},
-			new int[]{15},
-			new int[]{28},
-			new int[]{0},
-			new int[]{0},
-			new int[]{8},
-			new int[]{16},
-			new int[]{24},
-			new int[]{32},
-			new int[]{40}
-	};
+		new int[]{2, 5, 8, 12, 18, 32, 37, 40, 49},
+		new int[]{2, 11, 15, 28, 50},
+		new int[]{5, 27, 44, 45, 52},
+		new int[]{6, 9, 31, 38, 41, 50},
+		new int[]{1, 5, 17, 42, 53},
+		new int[]{13, 16, 24, 48, 55},
+		new int[]{19, 52, 55},
+		new int[]{5, 20, 40, 52},
+		new int[]{15, 28},
+		new int[]{45},
+		new int[]{2, 18, 36, 38},
+		new int[]{14, 30, 45},
+		new int[]{7, 15, 38, 51},
+		new int[]{35, 46},
+		new int[]{4, 12, 15, 44},
+		new int[]{5, 13, 31, 38},
+		new int[]{20, 41, 44, 51},
+		new int[]{37, 40, 44, 51},
+		new int[]{28, 41, 50},
+		new int[]{0, 1, 2, 4, 5, 6, 9, 11, 13, 15, 16, 18, 20, 23, 24, 25, 27, 28, 31, 32, 33, 37, 41, 44, 45, 46, 48, 51, 52, 55},//egg #20 Cipher
+		new int[]{1, 2, 4, 5, 6, 7, 8, 12, 13, 15, 16, 17, 18, 19, 20, 23, 24, 28, 32, 33, 36, 37, 41, 42, 44, 46, 48, 51, 55},//egg #21 Clippen
+		new int[]{5, 6, 7, 8, 9, 13, 16, 18, 19, 27, 34, 35, 36, 42, 46, 50},//egg #22 Recky
+		new int[]{4, 5, 6, 7, 9, 11, 13, 17, 19, 20, 23, 24, 27, 28, 36, 38, 41, 48, 49, 52, 53, 55},//egg #23 Richie
+		new int[]{17, 18, 19, 27, 28, 31, 35, 37, 40, 41, 42, 44, 45},//egg #24 Peliwan
+		new int[]{12, 15, 18, 20, 23, 38, 52},//egg #25 Runny
+		new int[]{40, 41, 45, 48, 49, 51, 52, 53, 55},//egg #26 Rabbish
+		new int[]{20, 45},
+		new int[]{6, 15},
+		new int[]{28, 37},
+		new int[]{23, 24, 49},
+		new int[]{25, 31, 34, 37, 38, 40, 44, 46, 51, 53, 55},//egg #31 Boskus
+		new int[]{28, 31, 32, 35, 37, 40, 42, 49, 51},//egg #32 Oritta
+		new int[]{33, 36, 42, 50},//egg #33 Biboo
+		new int[]{1, 7, 17, 20, 28, 41, 55},//egg #34 Gorilla
+		new int[]{2, 6, 9, 17, 20, 31, 45, 50},//egg #35 Chameleon
+		new int[]{40},
+		new int[]{12, 19, 49},
+		new int[]{7, 11, 13, 18, 20, 33, 38, 42, 51},//egg #38 Lion
+		new int[]{7, 23, 46},
+		new int[]{24, 40, 42},
+		new int[]{0, 31, 44},
+		new int[]{23, 45, 49, 51},
+		new int[]{17, 25},
+		new int[]{6, 23},
+		new int[]{0, 5, 7, 13, 15, 17, 18, 23, 25, 27, 32, 42, 44, 48},//egg #45 Big Butterfly
+		new int[]{6, 15, 20, 28, 35, 44, 52},
+		new int[]{1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 15, 16, 18, 19, 20, 24, 28, 31, 32, 35, 36, 37, 38, 40, 41, 45, 46, 50, 51, 52, 53, 55},//egg #47 Small Butterfly
+		new int[]{0, 1, 2, 3, 4, 6, 7, 8, 11, 12, 13, 15, 17, 23, 33, 36, 38},//egg #48 1-up
+		new int[]{7, 9, 11, 13, 15, 18, 20, 27, 31, 37, 49, 51, 52, 53, 55},//egg #49 Chick Bomb
+		new int[]{23, 28, 35, 40, 41, 45, 53},
+		new int[]{9},
+		new int[]{33},
+		new int[]{17},
+		new int[]{41},
+		new int[]{26},
+		new int[]{18},
+		new int[]{44},
+		new int[]{7},
+		new int[]{0},
+		new int[]{25},
+		new int[]{12},
+		new int[]{51},
+		new int[]{35},
+		new int[]{15},
+		new int[]{28},
+		new int[]{0},
+		new int[]{0},
+		new int[]{8},
+		new int[]{16},
+		new int[]{24},
+		new int[]{32},
+		new int[]{40}
+};
 	
 	public static final int[] getEggLocations(int eggID) { return eggLocations[eggID]; }
 	
