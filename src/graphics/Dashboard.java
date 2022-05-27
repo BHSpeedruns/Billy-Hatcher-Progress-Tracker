@@ -379,7 +379,7 @@ class LevelSelect extends JPanel{
 		}
 		
 		for(int i = 0; i < 5; i++) {
-			try { rankIcons[i] = ImageIO.read(new File("assets/misc/"+(Rank.values()[i+1].name())+"-rank.png")); }
+			try { rankIcons[i] = ImageIO.read(new File("assets/misc/rank"+(Rank.values()[i+1].name())+".png")); }
 			catch(Exception e) { System.out.println("Failed to load rank icons"); }
 		}
 		
@@ -440,7 +440,7 @@ class LevelSelect extends JPanel{
 			final Rank rank = game.getLevel(levelIndex).getRank();
 			g.setColor(Color.WHITE);
 			g.drawRect(rankStartX, rankStartY, rankWidth, rankHeight);
-			if(rank!=Rank.NORANK) { //TODO: These rank images don't fit the box well
+			if(rank!=Rank.NORANK) { // rankX.pngs are same size as rank box
 				//TODO: probably not best to use the ordinal index. Maybe add methods to go both ways in Rank
 				g.drawImage(rankIcons[rank.ordinal() - 1], rankStartX, rankStartY, rankWidth, rankHeight, null);
 			}
