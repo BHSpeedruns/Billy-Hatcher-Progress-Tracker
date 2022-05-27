@@ -483,7 +483,7 @@ class ChickCoin extends JButton {
 		coinNum = num; 
 		
 		if(coinImage == null) {
-			try { coinImage = ImageIO.read(new File("assets/misc/temporarychickcoin.png")); } //TODO: I didn't have the chick coin image on hand, we need to update it
+			try { coinImage = ImageIO.read(new File("assets/misc/chickCoin.png")); } 
 			catch(Exception e) { System.out.println("Failed to load chick coin image"); }
 		}
 		
