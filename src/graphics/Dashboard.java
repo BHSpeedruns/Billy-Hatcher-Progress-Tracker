@@ -582,6 +582,8 @@ class Egg extends JButton {
 		g.drawImage(Dashboard.smallEggPngs[eggsToDraw[eggNum]], eggStartX + eggNum*eggWidth, eggStartY, eggWidth, eggHeight, null);
 		
 		g.drawRect(eggStartX + eggNum*eggWidth, eggStartY, eggWidth, eggHeight);
+
+		this.setToolTipText("Egg #"+(eggsToDraw[eggNum]+1)+": "+GameDataLookup.getEggName(eggsToDraw[eggNum]));
 		
 		if(game.getEggHatched(eggsToDraw[eggNum])) { //TODO: this checkmark looks awful lol, extremely temporary
 			g.drawImage(checkmark,eggStartX + eggNum*eggWidth,eggStartY,eggWidth,eggHeight,null);
