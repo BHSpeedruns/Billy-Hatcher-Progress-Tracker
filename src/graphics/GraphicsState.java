@@ -21,6 +21,8 @@ public final class GraphicsState {
 	
 	public int getWorldNum() { return worldNum; }
 	public int getLevelNum() { return levelNum; }
+	public int getLevelIndex() { return worldNum*8 + levelNum; }
+	
 	public WindowState getScreen() { return screen; }
 	
 	public void setWorldNum(int world) { worldNum = world; }

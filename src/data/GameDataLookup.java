@@ -157,6 +157,7 @@ public class GameDataLookup {
 	};
 	public static final String getEggName(int eggID) { return eggNames[eggID]; }
 
+	public static final int MAX_EGGS_PER_LEVEL = 16;
 	private static final int[][] eggsInLevels = {
 			new int[]{19, 40, 44, 47, 58, 65, 66},
 			new int[]{4, 19, 20, 33, 46, 47},
@@ -295,6 +296,7 @@ public class GameDataLookup {
 	
 	public static final int[] getEggLocations(int eggID) { return eggLocations[eggID]; }
 	
+	public static final int NUM_COINS_PER_LEVEL = 5;
 	public static final String[][] chickCoinNotes = {
 			new String[]{"Coin beside chick after first gate",
 				"Coin on right before slide to gold egg",

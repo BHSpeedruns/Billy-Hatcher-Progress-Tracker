@@ -29,20 +29,6 @@ public final class GameState {
 		return new int[]{courageEmblems,levelsCompleted,chickCoins,eggsHatched,sRanks};
 	}
 	
-	public void setCoinsCollected(int level, boolean[] coins) {
-		int numCoins = 0;
-		for(boolean coin : coins) { if(coin) { numCoins++; } }
-		
-		if(chickCoins == GameDataLookup.MAX_CHICK_COINS && numCoins!=5) { decrementCourageEmblems(); } //Unset "All Coins" Emblem
-		
-		chickCoins -= worlds[level/8].getLevel(level%8).getNumChickCoins();
-		chickCoins += numCoins;
-		
-		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { incrementCourageEmblems(); } //Set "All Coins" Emblem
-		
-		worlds[level/8].getLevel(level%8).setChickCoins(coins);
-	}
-	
 	public Level getLevel(int level) { return worlds[level/8].getLevel(level%8); }	
 	
 	public Level[] completeLevel(int level, Rank rank) {
@@ -115,9 +101,19 @@ public final class GameState {
 		return levelList.toArray(new Level[0]);
 	}
 	
-	
-	public boolean getEggHatched(int egg) { return eggList[egg]; }
-	public void setEggHatched(int egg, boolean hatched) { eggList[egg] = hatched; }
+	public void toggleCoinCollected(int level, int coin) {
+		
+		boolean collected = worlds[level/8].getLevel(level%8).getChickCoin(coin);
+		if(collected) {
+			decrementChickCoins();
+		}
+		else {
+			incrementChickCoins();
+		}
+		
+		worlds[level/8].getLevel(level%8).setChickCoin(coin, !collected);
+	}
+
 	public void toggleEggHatched(int egg) {
 		if(eggList[egg]) { decrementEggsHatched(); }
 		else { incrementEggsHatched(); }
@@ -160,4 +156,50 @@ public final class GameState {
 		if(eggsHatched == GameDataLookup.MAX_EGGS) { decrementCourageEmblems(); } //Unset "All Eggs" Emblem
 		eggsHatched--;
 	}
+	
+	private void incrementChickCoins() {
+		chickCoins++;
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { incrementCourageEmblems(); } //Set "All Coins" Emblem
+	}
+	private void decrementChickCoins() {
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { decrementCourageEmblems(); } //Unset "All Coins" Emblem
+		chickCoins--;
+	}
+	
+	
+	//////////////////////////////////
+	// Testing Functions
+	//////////////////////////////////
+	public void setCoinsCollected(int level, boolean[] coins) {
+		int numCoins = 0;
+		for(boolean coin : coins) { if(coin) { numCoins++; } }
+		
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS && numCoins!=5) { decrementCourageEmblems(); } //Unset "All Coins" Emblem
+		
+		chickCoins -= worlds[level/8].getLevel(level%8).getNumChickCoins();
+		chickCoins += numCoins;
+		
+		//FIXME: I am not convinced of this logic. Technically works cause all buttons are toggles and this is just for testing?
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { incrementCourageEmblems(); } //Set "All Coins" Emblem
+		
+		worlds[level/8].getLevel(level%8).setChickCoins(coins);
+	}
+	public void setCoinCollected(int level, int coin, boolean value) {
+		
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS && !value) { decrementCourageEmblems(); } //Unset "All Coins" Emblem
+		
+		if(value && !worlds[level/8].getLevel(level%8).getChickCoin(coin)) {
+			chickCoins++;
+		}
+		else if(!value && worlds[level/8].getLevel(level%8).getChickCoin(coin) ) {
+			chickCoins--;
+		}
+		
+		if(chickCoins == GameDataLookup.MAX_CHICK_COINS) { incrementCourageEmblems(); } //Set "All Coins" Emblem
+		
+		worlds[level/8].getLevel(level%8).setChickCoin(coin,value);
+	}
+	
+	public boolean getEggHatched(int egg) { return eggList[egg]; }
+	public void setEggHatched(int egg, boolean hatched) { eggList[egg] = hatched; }
 }

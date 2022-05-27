@@ -142,7 +142,8 @@ class LevelSelect extends JPanel{
     BufferedImage[] rankIcons = new BufferedImage[5];
     BufferedImage checkmark, chickCoin;
     
-    static ChickCoin[] chickCoins = new ChickCoin[5]; 
+    static ChickCoin[] chickCoins = new ChickCoin[GameDataLookup.NUM_COINS_PER_LEVEL];
+    static Egg[] eggs = new Egg[GameDataLookup.MAX_EGGS_PER_LEVEL];
 
 	public void initialize(GraphicsState g, GameState gm) {
 		graphics = g;
@@ -351,10 +352,15 @@ class LevelSelect extends JPanel{
                     .addComponent(giantPalaceButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < GameDataLookup.NUM_COINS_PER_LEVEL; i++) {
 			chickCoins[i] = new ChickCoin(game, graphics, i);
 			this.add("ChickCoinButton#"+(i+1),chickCoins[i]);
 		}
+        
+        for(int i = 0; i < GameDataLookup.MAX_EGGS_PER_LEVEL; i++) {
+        	eggs[i] = new Egg(game, graphics, i);
+        	this.add("EggButton#"+(i+1),eggs[i]);
+        }
 	}
 	private void initializeData() {
 		final String[] worldNamePNGs = {
@@ -377,9 +383,20 @@ class LevelSelect extends JPanel{
 			catch(Exception e) { System.out.println("Failed to load rank icons"); }
 		}
 		
-		try { checkmark = ImageIO.read(new File("assets/misc/checkmark.png")); }
-		catch(Exception e) { System.out.println("Failed to load checkmark image"); }
 		
+		//***********TESTING CODE***********//
+		/*	for(int i=1;i<GameDataLookup.MAX_LEVELS;i++) {
+				for(int j=0;j<GameDataLookup.NUM_COINS_PER_LEVEL;j++) {
+					game.toggleCoinCollected(i, j);
+				}
+			}
+			
+			for(int i = 0; i < GameDataLookup.MAX_EGGS;i++) {
+				if(i!=47) {
+					game.toggleEggHatched(i);
+				}
+			}
+		*/
 	}
 
 	protected void paintComponent(Graphics g) {		
@@ -393,9 +410,13 @@ class LevelSelect extends JPanel{
 		g.drawString("Level "+(graphics.getLevelNum()+1), 30, 350);
 		
 		
-		//TODO: somewhat stupid to do this. Marked true in drawLevelInfo.
-		for(int i=0;i<5;i++) {
+		//TODO: somewhat stupid to do this. Marked true in painting
+		for(int i=0;i< GameDataLookup.NUM_COINS_PER_LEVEL; i++) {
 			chickCoins[i].setVisible(false);
+		}
+		
+		for(int i=0;i<GameDataLookup.MAX_EGGS_PER_LEVEL;i++) {
+			eggs[i].setVisible(false);
 		}
 		
 		if(graphics.getWorldNum() != -1 && graphics.getLevelNum() != -1) {
@@ -407,29 +428,7 @@ class LevelSelect extends JPanel{
 	}
 	
 	private void drawLevelInfo(Graphics g) {
-		
-		//***********TESTING CODE***********//
-		
-		/*
-			game.getLevel(1).setRank(Rank.D); //forest 2
-			game.getLevel(2).setRank(Rank.C);
-			game.getLevel(3).setRank(Rank.B);
-			game.getLevel(4).setRank(Rank.A);
-			game.getLevel(5).setRank(Rank.S);
-			
-			game.setEggHatched(2,true); // Lightning Comb (seen on forest 5)
-			
-			game.getLevel(1).setChickCoin(0,true);
-			game.getLevel(2).setChickCoin(1,true);
-			game.getLevel(3).setChickCoin(2,true);
-			game.getLevel(4).setChickCoin(3,true);
-			game.getLevel(5).setChickCoin(4,true);
-			
-			game.getLevel(0).setChickCoins(new boolean[] {true,true,true,true,true});
-		
-		*/
-		
-		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+		final int world = graphics.getWorldNum(), levelIndex = graphics.getLevelIndex();
 
 		//Draw World & Level Information
 			g.drawString(GameDataLookup.getFullLevelName(levelIndex), 30, 400);
@@ -448,24 +447,16 @@ class LevelSelect extends JPanel{
 		
 		//Draw Coins
 			g.setColor(Color.WHITE);
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < GameDataLookup.NUM_COINS_PER_LEVEL; i++) {
 				chickCoins[i].setVisible(true);
 				chickCoins[i].paintComponent(g);
 			}
 			
-		//Draw Eggs
-			final int[] eggsToDraw = GameDataLookup.getEggsInLevel(levelIndex);
-			final int eggStartX = 30, eggStartY = 160, eggWidth = 64, eggHeight = 64;
-			
+		//Draw Eggs			
 			g.setColor(Color.WHITE);
-			for(int i = 0; i<eggsToDraw.length; i++) {
-				g.drawImage(Dashboard.smallEggPngs[eggsToDraw[i]], eggStartX + i*eggWidth, eggStartY, eggWidth, eggHeight, null);
-				g.drawRect(eggStartX + i*eggWidth, eggStartY, eggWidth, eggHeight);
-				if(game.getEggHatched(eggsToDraw[i])) { //TODO: this checkmark looks awful lol, extremely temporary
-					g.drawImage(checkmark,eggStartX + i*eggWidth,eggStartY,eggWidth,eggHeight,null);
-				}
+			for(int i = 0; i < GameDataLookup.MAX_EGGS_PER_LEVEL; i++) {
+				eggs[i].paintComponent(g);
 			}
-		
 	}
 	
 	
@@ -496,7 +487,7 @@ class ChickCoin extends JButton {
 			catch(Exception e) { System.out.println("Failed to load chick coin image"); }
 		}
 		
-		this.setBounds(coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight);
+		this.setBounds(1+coinStartX+coinNum*coinWidth, coinStartY+1, coinWidth-1, coinHeight-1);
 		
 		this.addActionListener(new ActionListener() {
 			
@@ -508,35 +499,92 @@ class ChickCoin extends JButton {
 		this.setToolTipText("");
 	}
 	
-	protected void coinPressed(ActionEvent e) {
-		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
-		if(game.getLevel(levelIndex).getChickCoins()[coinNum]) {
-			game.getLevel(levelIndex).setChickCoin(coinNum, false);
-		}
-		else {
-			game.getLevel(levelIndex).setChickCoin(coinNum, true);
-		}
+	protected void coinPressed(ActionEvent e) { 
+		game.toggleCoinCollected(graphics.getLevelIndex(), coinNum);
 	}
 
 	protected void paintComponent(Graphics g) {
-		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
 		
 		super.paintComponent(g);
 		
-		//FIXME: should be more on top somehow, seems to only do the bottom and right sides, jbutton default offset messes up top & left. Probably a bounds reduction
 		g.drawRect(coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight); 
 		
-		if(game.getLevel(levelIndex).getChickCoins()[coinNum]) { g.drawImage(coinImage, coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight, null); }
+		if(game.getLevel(graphics.getLevelIndex()).getChickCoins()[coinNum]) { g.drawImage(coinImage, coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight, null); }
 	}
 	
 	public String getToolTipText(MouseEvent evt){
         ToolTipManager.sharedInstance().setInitialDelay(100);
         ToolTipManager.sharedInstance().setDismissDelay(60000);
-
-        final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
         
-        if(level < 0) {return "";}
+        int levelIndex = graphics.getLevelIndex();
+        
+        if(levelIndex < 0) {return "";}
         
         return GameDataLookup.chickCoinNotes[levelIndex][coinNum];
     }
+}
+
+class Egg extends JButton {
+	
+	final int eggStartX = 30, eggStartY = 160, eggWidth = 64, eggHeight = 64;
+	
+	static BufferedImage checkmark;
+	
+	int eggNum;
+	GameState game;
+	GraphicsState graphics;
+	
+	Egg(GameState gm, GraphicsState gr, int num) { 
+		super.setContentAreaFilled(false);
+		
+		game = gm; 
+		graphics = gr; 
+		eggNum = num; 
+		
+		if(checkmark == null) {
+			try { checkmark = ImageIO.read(new File("assets/misc/checkmark.png")); }
+			catch(Exception e) { System.out.println("Failed to load checkmark image"); }
+		}
+		
+		this.setBounds(1+eggStartX+eggNum*eggWidth, eggStartY+1, eggWidth-1, eggHeight-1);
+		
+		this.addActionListener(new ActionListener() {
+			
+	    	public void actionPerformed(ActionEvent e) {
+	    		eggPressed(e);
+	    	}
+	    });
+	}
+	
+	protected void eggPressed(ActionEvent e) {
+		try {
+			game.toggleEggHatched(GameDataLookup.getEggsInLevel(graphics.getLevelIndex())[eggNum]);
+		}
+		catch(Exception noegg) {
+			//there are not this many eggs in the level
+		}
+	}
+
+	protected void paintComponent(Graphics g) {
+		
+		int levelIndex = graphics.getLevelIndex();
+		
+		if(levelIndex < 0) { return; }
+		
+		final int[] eggsToDraw = GameDataLookup.getEggsInLevel(levelIndex);
+		
+		if(eggNum > eggsToDraw.length -1 ) { return; }
+		
+		this.setVisible(true);
+		super.paintComponent(g);
+		
+		g.setColor(Color.WHITE);
+		g.drawImage(Dashboard.smallEggPngs[eggsToDraw[eggNum]], eggStartX + eggNum*eggWidth, eggStartY, eggWidth, eggHeight, null);
+		
+		g.drawRect(eggStartX + eggNum*eggWidth, eggStartY, eggWidth, eggHeight);
+		
+		if(game.getEggHatched(eggsToDraw[eggNum])) { //TODO: this checkmark looks awful lol, extremely temporary
+			g.drawImage(checkmark,eggStartX + eggNum*eggWidth,eggStartY,eggWidth,eggHeight,null);
+		}
+	}
 }
