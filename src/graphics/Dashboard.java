@@ -385,10 +385,18 @@ class LevelSelect extends JPanel{
 		
 		
 		//***********TESTING CODE***********//
-			/*for(int i=0;i<55;i++) {
-				game.setCoinsCollected(i, new boolean[] {true,true,true,true,true});
-			}*/
-		
+		/*	for(int i=1;i<GameDataLookup.MAX_LEVELS;i++) {
+				for(int j=0;j<GameDataLookup.NUM_COINS_PER_LEVEL;j++) {
+					game.toggleCoinCollected(i, j);
+				}
+			}
+			
+			for(int i = 0; i < GameDataLookup.MAX_EGGS;i++) {
+				if(i!=47) {
+					game.toggleEggHatched(i);
+				}
+			}
+		*/
 	}
 
 	protected void paintComponent(Graphics g) {		
@@ -420,7 +428,7 @@ class LevelSelect extends JPanel{
 	}
 	
 	private void drawLevelInfo(Graphics g) {
-		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+		final int world = graphics.getWorldNum(), levelIndex = graphics.getLevelIndex();
 
 		//Draw World & Level Information
 			g.drawString(GameDataLookup.getFullLevelName(levelIndex), 30, 400);
@@ -444,13 +452,11 @@ class LevelSelect extends JPanel{
 				chickCoins[i].paintComponent(g);
 			}
 			
-		//Draw Eggs
-			
+		//Draw Eggs			
 			g.setColor(Color.WHITE);
 			for(int i = 0; i < GameDataLookup.MAX_EGGS_PER_LEVEL; i++) {
 				eggs[i].paintComponent(g);
 			}
-		
 	}
 	
 	
@@ -481,7 +487,7 @@ class ChickCoin extends JButton {
 			catch(Exception e) { System.out.println("Failed to load chick coin image"); }
 		}
 		
-		this.setBounds(coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight);
+		this.setBounds(1+coinStartX+coinNum*coinWidth, coinStartY+1, coinWidth-1, coinHeight-1);
 		
 		this.addActionListener(new ActionListener() {
 			
@@ -493,32 +499,24 @@ class ChickCoin extends JButton {
 		this.setToolTipText("");
 	}
 	
-	protected void coinPressed(ActionEvent e) {
-		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
-		if(game.getLevel(levelIndex).getChickCoins()[coinNum]) {
-			game.setCoinCollected(levelIndex, coinNum, false);
-		}
-		else {
-			game.setCoinCollected(levelIndex, coinNum, true);
-		}
+	protected void coinPressed(ActionEvent e) { 
+		game.toggleCoinCollected(graphics.getLevelIndex(), coinNum);
 	}
 
 	protected void paintComponent(Graphics g) {
-		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
 		
 		super.paintComponent(g);
 		
-		//FIXME: should be more on top somehow, seems to only do the bottom and right sides, jbutton default offset messes up top & left. Probably a bounds reduction
 		g.drawRect(coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight); 
 		
-		if(game.getLevel(levelIndex).getChickCoins()[coinNum]) { g.drawImage(coinImage, coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight, null); }
+		if(game.getLevel(graphics.getLevelIndex()).getChickCoins()[coinNum]) { g.drawImage(coinImage, coinStartX+coinNum*coinWidth, coinStartY, coinWidth, coinHeight, null); }
 	}
 	
 	public String getToolTipText(MouseEvent evt){
         ToolTipManager.sharedInstance().setInitialDelay(100);
         ToolTipManager.sharedInstance().setDismissDelay(60000);
-
-        final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+        
+        int levelIndex = graphics.getLevelIndex();
         
         if(levelIndex < 0) {return "";}
         
@@ -548,7 +546,7 @@ class Egg extends JButton {
 			catch(Exception e) { System.out.println("Failed to load checkmark image"); }
 		}
 		
-		this.setBounds(eggStartX+eggNum*eggWidth, eggStartY, eggWidth, eggHeight);
+		this.setBounds(1+eggStartX+eggNum*eggWidth, eggStartY+1, eggWidth-1, eggHeight-1);
 		
 		this.addActionListener(new ActionListener() {
 			
@@ -559,9 +557,8 @@ class Egg extends JButton {
 	}
 	
 	protected void eggPressed(ActionEvent e) {
-		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
 		try {
-			game.toggleEggHatched(GameDataLookup.getEggsInLevel(levelIndex)[eggNum]);
+			game.toggleEggHatched(GameDataLookup.getEggsInLevel(graphics.getLevelIndex())[eggNum]);
 		}
 		catch(Exception noegg) {
 			//there are not this many eggs in the level
@@ -569,7 +566,9 @@ class Egg extends JButton {
 	}
 
 	protected void paintComponent(Graphics g) {
-		final int level = graphics.getLevelNum(), world = graphics.getWorldNum(), levelIndex = world*8 + level;
+		
+		int levelIndex = graphics.getLevelIndex();
+		
 		if(levelIndex < 0) { return; }
 		
 		final int[] eggsToDraw = GameDataLookup.getEggsInLevel(levelIndex);
@@ -582,7 +581,6 @@ class Egg extends JButton {
 		g.setColor(Color.WHITE);
 		g.drawImage(Dashboard.smallEggPngs[eggsToDraw[eggNum]], eggStartX + eggNum*eggWidth, eggStartY, eggWidth, eggHeight, null);
 		
-		//FIXME: should be more on top somehow, seems to only do the bottom and right sides, jbutton default offset messes up top & left. Probably a bounds reduction
 		g.drawRect(eggStartX + eggNum*eggWidth, eggStartY, eggWidth, eggHeight);
 		
 		if(game.getEggHatched(eggsToDraw[eggNum])) { //TODO: this checkmark looks awful lol, extremely temporary
