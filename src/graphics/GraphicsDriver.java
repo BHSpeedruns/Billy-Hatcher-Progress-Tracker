@@ -8,21 +8,16 @@ import data.GameState;
 
 public final class GraphicsDriver {
 
-	private GraphicsState graphicsstate = new GraphicsState();
 	private GameState gamestate;
 	
-	private Dashboard dashboard = new Dashboard();
-	private SummaryPanel summary = new SummaryPanel();
+	private Dashboard dashboard;
+	private SummaryPanel summary;
 	
 	public static Font regular;
 	
 	public void initialize(GameState game) {
-		graphicsstate.initialize();
 		gamestate = game;
-		initializeResources();
-		initializeFrames();
-	}
-	private void initializeResources() {
+		
 		try {
 			if(true) {throw new Exception();} //FIXME: temporary stupidity
 			
@@ -32,27 +27,14 @@ public final class GraphicsDriver {
 		catch (Exception e) {
 			regular = new Font("Times New Roman", Font.BOLD, 18);
 		}
-	}
-	private void initializeFrames() {
 		
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		}
 		catch (Exception e) { e.printStackTrace(); }
 		UIManager.put("swing.boldMetal", Boolean.FALSE);
-		
-        dashboard.initialize(graphicsstate,gamestate);
-        summary.initialize(graphicsstate,gamestate);
-	}
-	
-	private void drawFrames() {
-		dashboard.update();
-		summary.update();
-	}
-	public void redrawIfNeeded() { 
-		if(graphicsstate.needsRefresh()) { 
-			drawFrames(); 
-			graphicsstate.done(); 
-		}
+
+		dashboard = new Dashboard(gamestate);
+		summary = new SummaryPanel(gamestate);
 	}
 }

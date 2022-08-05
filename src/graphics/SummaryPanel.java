@@ -11,51 +11,53 @@ import data.GameDataLookup;
 import data.GameState;
 
 public class SummaryPanel extends JFrame{
+	private final Dimension SIZE = new Dimension(510, 310);
 	
-	GraphicsState graphics;
 	GameState game;
 	
-	private SummaryPane pane = new SummaryPane();
+	SummaryPane pane;
 	
-	public void initialize(GraphicsState graphicsstate, GameState gamestate) {
-		graphics = graphicsstate;
+	public SummaryPanel(GameState gamestate) {
 		game = gamestate;
+		pane = new SummaryPane(this, gamestate);
 		
 		setUndecorated(true);
 		setTitle("CHOOSE THIS WINDOW FOR CAPTURE");
 		add(pane);
 		pack();
-		setSize(WIDTH,HEIGHT);
+		setSize(SIZE);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-		pane.initialize(graphicsstate, gamestate);
 		
 	}
 	
-	public void update() { repaint(); }
+	public void update() { pane.repaint(); }
+	
+	public int getWidth() { return SIZE.width; }
+	public int getHeight() { return SIZE.height; }
 }
 class SummaryPane extends JPanel {
 	
+	SummaryPanel frame;
 	GameState game;
-	GraphicsState graphics;
 	
-	public void initialize(GraphicsState graphicsstate, GameState gamestate) { graphics = graphicsstate; game = gamestate; }
+	public SummaryPane(SummaryPanel parent, GameState gamestate) { frame = parent; game = gamestate; }
 	
 	protected void paintComponent(Graphics g) {		
 		super.paintComponent(g);
 		
-		int[] data = game.getSummaryData();
+		// Game/Graphics States not loaded yet? FIXME
+		int[] data = game.getSummaryData(); 
 		
-		Dimension window = graphics.getSummaryPanelDimensions();
 		
-		g.clearRect(0, 0, window.width, window.height);
+		g.clearRect(0, 0, frame.getWidth(), frame.getHeight());
 		
 		g.setFont(GraphicsDriver.regular);
 		
 		//Background
 			g.setColor(new Color(186, 142, 74));
-			g.fillRect(0, 0, window.width, window.height); //FIXME: ???
+			g.fillRect(0, 0, frame.getWidth(), frame.getHeight());
 		
 		//Text
 			g.setColor(Color.BLACK);

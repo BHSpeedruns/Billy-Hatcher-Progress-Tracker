@@ -8,7 +8,20 @@ public class GameDataLookup {
 	public static final int MAX_CHICK_COINS = 280;
 	public static final int MAX_EGGS = 72;
 	
+	public static final int NUM_WORLDS = 7;
 	public static final int LEVELS_PER_WORLD = 8;
+	
+	public static final int NUM_RANKS= 6; //includes NORANK (incomplete)
+	
+	private static final String[] rankNames = {
+			"D",
+			"C",
+			"B",
+			"A",
+			"S"
+	};
+	
+	public static final String[] getRanks() { return rankNames; }
 
 	private static final String[] worldNames = {
 			"Forest Village",
@@ -79,7 +92,7 @@ public class GameDataLookup {
 	};
 	public static final String getWorldName(int worldID) { return worldNames[worldID]; }
 	public static final String getLevelName(int levelID) { return levelNames[levelID]; }
-	public static final String getFullLevelName(int levelID) { return getWorldName(levelID/8) + " "+((levelID%8)+1)+" - " + getLevelName(levelID); }
+	public static final String getFullLevelName(int levelID) { return getWorldName(levelID/LEVELS_PER_WORLD) + " "+((levelID%LEVELS_PER_WORLD)+1)+" - " + getLevelName(levelID); }
 	
 	private static final String[] eggNames = {
 			"Fire Comb",
