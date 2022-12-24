@@ -92,6 +92,7 @@ public class GameDataLookup {
 	};
 	public static final String getWorldName(int worldID) { return worldNames[worldID]; }
 	public static final String getLevelName(int levelID) { return levelNames[levelID]; }
+	public static final String getLevelNumberFormat(int levelID) { return ((levelID%LEVELS_PER_WORLD)+1)+" - " + ((levelID/LEVELS_PER_WORLD)+1); }
 	public static final String getFullLevelName(int levelID) { return getWorldName(levelID/LEVELS_PER_WORLD) + " "+((levelID%LEVELS_PER_WORLD)+1)+" - " + getLevelName(levelID); }
 	
 	private static final String[] eggNames = {

@@ -21,6 +21,17 @@ public class Dashboard extends JFrame {
 	LevelSelect levelSelect;
 	
 	public static BufferedImage[] smallEggPngs = new BufferedImage[72];
+	public static BufferedImage checkmark;
+	
+	static {
+		try { checkmark = ImageIO.read(new File("assets/misc/checkmark.png")); }
+		catch(Exception e) { System.out.println("Failed to load checkmark image"); }
+		
+		for(int i = 1; i <= GameDataLookup.MAX_EGGS; i++) {
+			try { smallEggPngs[i-1] = ImageIO.read(new File("assets/Egg PNGs/Numbered/"+i+".png")); } 
+			catch(Exception e) { System.out.println("Failed to load numbered egg pngs"); }
+		}
+	}
 	
 	public Dashboard(GameState gm) {
 		game = gm;
@@ -28,12 +39,6 @@ public class Dashboard extends JFrame {
 		// Initialize Panes
 			eggGallery = new EggGallery(this,game);
 			levelSelect = new LevelSelect(this,game);
-		
-		// Initialize Data
-			for(int i = 1; i <= GameDataLookup.MAX_EGGS; i++) {
-				try { smallEggPngs[i-1] = ImageIO.read(new File("assets/Egg PNGs/Numbered/"+i+".png")); } 
-				catch(Exception e) { System.out.println("Failed to load numbered egg pngs"); }
-			}
 						
 		// Initialize Frame
 			setTitle("Billy Hatcher 100% Progress Tracker");
