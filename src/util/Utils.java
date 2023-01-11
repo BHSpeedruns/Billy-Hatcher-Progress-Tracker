@@ -1,9 +1,15 @@
 package util;
 
+import java.awt.Dimension;
+import java.awt.Image;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
 import data.GameDataLookup;
+import graphics.GraphicsDriver;
 
 public class Utils {
 	
@@ -17,5 +23,12 @@ public class Utils {
 			levelNames[level] = GameDataLookup.getLevelName(level);
 		}
 		return levelNames;
+	}
+	
+	public final static Icon scaleIcon(ImageIcon imageIcon, Dimension eggButton) {
+		return scaleIcon(imageIcon, eggButton.width, eggButton.height);
+	}
+	public final static ImageIcon scaleIcon(ImageIcon image, int newWidth, int newHeight) {
+		return new ImageIcon(image.getImage().getScaledInstance(64,64, java.awt.Image.SCALE_SMOOTH));
 	}
 }

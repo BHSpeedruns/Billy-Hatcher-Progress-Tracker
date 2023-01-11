@@ -1,133 +1,115 @@
 package graphics;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Arrays;
 
+import java.awt.Image;
+import java.awt.LayoutManager;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import data.GameDataLookup;
-import data.GameState;
 import util.Utils;
 
-public class EggGallery extends JPanel implements MouseListener {
+public class EggGallery {
+
+	private JPanel panel = new JPanel();
+	public JPanel getPanel() {return panel;}
 	
-	Dashboard frame;
-	GameState game;
+	int currentEgg = -1;
 	
-	int currentEgg = 4;
+	JButton[] eggButtons = new JButton[72];
+	JLabel selectedEggImage;
+	JLabel selectedEggName;
+	JLabel selectedEggLevels; // TODO: JButtons to open maps?
+	JLabel selectedEggFruitCount;
+	JLabel[] selectedEggFruitPreferences = new JLabel[7];
 	
-	final int xEggList = 0, eggWidth = 64, eggHeight = 64, xSpacer = 10, ySpacer = 5;
+	JButton levelSelectButton;
 	
-	public EggGallery(Dashboard p, GameState gm) {
-		frame = p;
-		game = gm;
-		initializeFrame();
-		addMouseListener(this);
+	public void initialize() {
+		for(int i = 0; i < 72; i++) {
+			final int j = i; // Use a final copy for listener
+			eggButtons[i] = new JButton();
+			eggButtons[i].setPreferredSize(new Dimension(64,64));
+			eggButtons[i].setIcon(Utils.scaleIcon(GraphicsDriver.eggIcons[i], 64, 64));
+			eggButtons[i].addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {eggButtonSelected(j);}});
+			panel.add(eggButtons[i]);
+		}
+		selectedEggImage = new JLabel();
+		selectedEggImage.setPreferredSize(new Dimension(300,300));
+		panel.add(selectedEggImage);
+		
+		selectedEggName = new JLabel();
+		panel.add(selectedEggName);
+		
+		selectedEggLevels = new JLabel();
+		panel.add(selectedEggLevels);
+		
+		selectedEggFruitCount = new JLabel();
+		panel.add(selectedEggFruitCount);
+		
+		for(int i = 0; i < 7; i++) {
+			selectedEggFruitPreferences[i] = new JLabel();
+			selectedEggFruitPreferences[i].setIcon(GraphicsDriver.fruitIcons[i]);
+			panel.add(selectedEggFruitPreferences[i]);
+		}
+		
+		levelSelectButton = new JButton("Level Select");
+		levelSelectButton.addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {clear(); Dashboard.switchPane();}});
+		panel.add(levelSelectButton);
 	}
 
-	private void initializeFrame() {
-		JButton levelSelectButton = new JButton();
-		levelSelectButton.setText("Level Select");
-		levelSelectButton.addActionListener(new ActionListener() {
-	            public void actionPerformed(ActionEvent e) {
-	            	levelSelectButtonPressed(e);
-	            }
-        });
+	public void update() {
+		if(currentEgg == -1) { return; }
 		
-	}
-	
-	protected void paintComponent(Graphics g) {
-		final int leftWidth = 700;
-		super.paintComponent(g);
-		paintEggList(g, xEggList, leftWidth);
-		paintCurrentEggInfo(g, leftWidth, 1020 - leftWidth);
+		selectedEggImage.setIcon(Utils.scaleIcon(GraphicsDriver.eggIcons[currentEgg], 300, 300));
+		selectedEggName.setText(GameDataLookup.getEggName(currentEgg));
+		//selectedEggLevels.setText(Arrays.toString(Utils.levelIndiciesToNames(GameDataLookup.getEggLocations(currentEgg))));
 		
-	}
-	private void paintEggList(Graphics g, int startX, int width) {
+		selectedEggFruitCount.setText("Fruit Required to Hatch: "+GameDataLookup.getEggFruitCount(currentEgg));
 		
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, width, 600);
-		
-		for(int i=0;i<72;i++) {
-			if(i%2==0) {game.setEggHatched(i,true);}
-			g.setColor(Color.BLUE);
-			g.drawRect(
-				startX + 2*xSpacer + ((eggWidth +xSpacer)* (i%9)), 
-				3*ySpacer + (eggHeight+ySpacer)*(i/9), 
-				eggWidth, 
-				eggHeight
-			);
-			g.drawImage(Dashboard.smallEggPngs[i], 
-				startX + 2*xSpacer + ((eggWidth +xSpacer)* (i%9)), 
-				3*ySpacer + (eggHeight+ySpacer)*(i/9), 
-				eggWidth, 
-				eggHeight,
-				null
-			);
-
-			if(game.getEggHatched(i)) {
-				g.drawImage(Dashboard.checkmark,
-					startX + 2*xSpacer + ((eggWidth +xSpacer)* (i%9)), 
-					3*ySpacer + (eggHeight+ySpacer)*(i/9), 
-					eggWidth, 
-					eggHeight,
-					null
-				);
-			}
+		boolean[] preferences = GameDataLookup.getEggFruitPreferences(currentEgg);
+		for(int i = 0; i < 7; i++) {
+			selectedEggFruitPreferences[i].setEnabled(preferences[i]);
 		}
 	}
-	private void paintCurrentEggInfo(Graphics g, int startX, int width) {
-		g.setColor(Color.BLACK);
-		g.fillRect(startX + 5, 10, width-10, 300);
-		g.drawImage(Dashboard.smallEggPngs[currentEgg], startX + 5, 10, width-20, 300, null);
-		
-		g.drawString(GameDataLookup.getEggName(currentEgg), startX + 5, 325);
-		
-		g.drawString("Collected: "+game.getEggHatched(currentEgg), startX+5, 350);
-		g.drawString("Found in: "+Arrays.toString(Utils.levelIndiciesToNames(GameDataLookup.getEggLocations(currentEgg))), startX+5, 400);
-		
-		g.setColor(Color.GRAY);
-		g.fillRect(startX + 5, 525, width-25, 50);
-		
-		g.setColor(Color.CYAN);
-		g.drawString("ADD BUTTON BACK TO LEVEL SELECT HERE", startX+10, 540);
-		
+	
+	public void clear() {
+		//TODO: implement
 	}
-	protected void levelSelectButtonPressed(ActionEvent e) { System.out.println("Switching to LevelSelect"); }
-
-	public void mouseClicked(MouseEvent e) {}
-
-	public void mousePressed(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
-		
-		// Adjustments to account for borders
-		x -= xEggList + 2*xSpacer;
-		y -= 3*ySpacer;
-		
-		// Left & Top
-		if(x < 0 || y < 0) { return; } 
-		
-		// Right and Bottom
-		if(x > ((eggWidth +xSpacer) * 8) + eggWidth) { return; }
-		if(y > ((eggHeight+ySpacer) * 7) + eggHeight) { return; }
-		
-		x /= eggWidth +xSpacer;
-		y /= eggHeight+ySpacer;
-		
-		currentEgg = x + 9*y;
-		
-		frame.update();
-		
-	}
-
-	public void mouseReleased(MouseEvent e) {}
-	public void mouseEntered(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
+	
+	private void eggButtonSelected(int eggID) { currentEgg = eggID; GraphicsDriver.update(); }
 }
+
+//TODO: implement
+class EggGalleryLayout implements LayoutManager {
+	public void addLayoutComponent(String name, Component comp) {
+		
+	}
+
+	public void removeLayoutComponent(Component comp) {
+		
+	}
+
+	public Dimension preferredLayoutSize(Container parent) {
+		return null;
+	}
+
+	public Dimension minimumLayoutSize(Container parent) {
+		return null;
+	}
+
+	public void layoutContainer(Container parent) {
+		parent.getComponents();
+	}
+	
+}
+
