@@ -20,14 +20,14 @@ public class Utils {
 	public final static String[] levelIndiciesToNames(int[] levels) {
 		String[] levelNames = new String[levels.length];
 		for(int level = 0; level<levels.length; level++) {
-			levelNames[level] = GameDataLookup.getLevelName(level);
+			levelNames[level] = GameDataLookup.getLevelName(levels[level]);
 		}
 		return levelNames;
 	}
 	public final static String[] levelIndiciesToWorldMissionPairs(int[] levels) {
 		String[] levelNames = new String[levels.length];
 		for(int level = 0; level<levels.length; level++) {
-			levelNames[level] = GameDataLookup.getLevelNumberFormat(level);
+			levelNames[level] = GameDataLookup.getLevelNumberFormat(levels[level]);
 		}
 		return levelNames;
 	}
