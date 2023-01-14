@@ -24,6 +24,13 @@ public class Utils {
 		}
 		return levelNames;
 	}
+	public final static String[] levelIndiciesToWorldMissionPairs(int[] levels) {
+		String[] levelNames = new String[levels.length];
+		for(int level = 0; level<levels.length; level++) {
+			levelNames[level] = GameDataLookup.getLevelNumberFormat(level);
+		}
+		return levelNames;
+	}
 	
 	public final static Icon scaleIcon(ImageIcon imageIcon, Dimension eggButton) {
 		return scaleIcon(imageIcon, eggButton.width, eggButton.height);

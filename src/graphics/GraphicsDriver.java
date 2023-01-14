@@ -18,6 +18,7 @@ public class GraphicsDriver {
 	
 	// Graphics Objects
 	public static ImageIcon chickCoin;
+	public static ImageIcon checkmark;
 	public static ImageIcon[] worldIcons = new ImageIcon[7];
 	public static ImageIcon[] eggIcons = new ImageIcon[72];
 	public static ImageIcon[] rankIcons = new ImageIcon[6];
@@ -26,6 +27,7 @@ public class GraphicsDriver {
 	
 	static {
 		chickCoin = new ImageIcon("assets/misc/chickcoin.png","Chick Coin");
+		checkmark = new ImageIcon("assets/misc/checkmark.png","Checkmark");
 		
 		worldIcons[0] = new ImageIcon("assets/misc/forest-village1.png"	, "Forest Village" 	);
 		worldIcons[1] = new ImageIcon("assets/misc/pirates-island.png"	, "Pirate's Island"	);
@@ -74,7 +76,7 @@ public class GraphicsDriver {
 		JFrame popup = new JFrame();
 		popup.add(pane);
 		popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		popup.setSize(new Dimension(missionMaps[level].getIconWidth(),missionMaps[level].getIconHeight()));
+		popup.setSize(new Dimension(missionMaps[level].getIconWidth() + 64,missionMaps[level].getIconHeight() + 64));
 		popup.setLocationRelativeTo(null);
 		popup.setVisible(true);
 	}

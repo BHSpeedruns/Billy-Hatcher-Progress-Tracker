@@ -32,6 +32,8 @@ public final class GameState {
 	public Level getLevel(int level) { return worlds[level/8].getLevel(level%8); }	
 	
 	public Level[] completeLevel(int level, Rank rank) {
+		if(rank == Rank.NORANK) { return incompleteLevel(level); }
+		
 		Level levelCompleted = getLevel(level);
 		
 		if(levelCompleted.getRank() != Rank.S && rank == Rank.S)      { incrementSRanks(); } //New S Rank
@@ -42,13 +44,17 @@ public final class GameState {
 		if(levelCompleted.getState() != LevelState.COMPLETE) { incrementCourageEmblems(); incrementLevelsCompleted(); }
 		return propagateLevelChange(level, LevelState.COMPLETE);
 	}
-	public Level[] incompleteLevel(int level) {
+	private Level[] incompleteLevel(int level) {
 		Level levelCompleted = getLevel(level);
+
+		if(levelCompleted.getRank()!= Rank.NORANK) {
+			
+			if(levelCompleted.getRank() == Rank.S) { decrementSRanks(); }
+			
+			levelCompleted.setRank(Rank.NORANK);
+			decrementCourageEmblems(); decrementLevelsCompleted();
+		}
 		
-		if(levelCompleted.getRank() == Rank.S) { decrementSRanks(); }
-		levelCompleted.setRank(Rank.NORANK);
-		
-		decrementCourageEmblems(); decrementLevelsCompleted();
 		return propagateLevelChange(level, LevelState.INCOMPLETE);
 	}
 	private Level[] propagateLevelChange(int level, LevelState state) {
