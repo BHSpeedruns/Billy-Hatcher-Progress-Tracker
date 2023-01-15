@@ -46,7 +46,8 @@ public class GraphicsDriver {
 		}
 		
 		for(int i = 0; i < fruitIcons.length; i++) {
-			fruitIcons[i] = new ImageIcon("assets/misc/"+GameDataLookup.getFruits()[i]+".png");
+			//added small & full resolution fruits
+			fruitIcons[i] = new ImageIcon("assets/misc/84"+GameDataLookup.getFruits()[i]+".png");
 		}
 		
 		for(int i = 0; i < missionMaps.length; i++) {
