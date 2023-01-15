@@ -47,41 +47,45 @@ public class EggGallery {
 			eggButtons[i].setIcon(Utils.scaleIcon(GraphicsDriver.eggIcons[i], eggWidth, eggHeight));
 			eggButtons[i].setSize(new Dimension(eggWidth,eggHeight));
 			eggButtons[i].setLocation(startX + 2*xSpacer + ((eggWidth +xSpacer)* (i%9)), 3*ySpacer + (eggHeight+ySpacer)*(i/9));
+			if(GameDataLookup.getIsSonicEgg(i)) { 
+				eggButtons[i].setToolTipText("Requires "+GameDataLookup.getSonicEggChickCoinRequirement(i)+" Chick Coins");
+			}
 			
 			eggButtons[i].addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {eggButtonSelected(j);}});
 			panel.add(eggButtons[i]);
 		}
 		selectedEggImage = new JLabel();
 		selectedEggImage.setSize(new Dimension(300,300));
-		selectedEggImage.setLocation(700, 0);
+		selectedEggImage.setLocation(680, 0);
 		panel.add(selectedEggImage);
 		
 		selectedEggName = new JLabel();
 		selectedEggName.setSize(new Dimension(300,16));
-		selectedEggName.setLocation(700,20);
+		selectedEggName.setLocation(700,320);
 		panel.add(selectedEggName);
 		
 		selectedEggLevels = new JLabel();
 		selectedEggLevels.setSize(new Dimension(300,16));
-		selectedEggLevels.setLocation(700,40);
+		selectedEggLevels.setLocation(700,340);
 		panel.add(selectedEggLevels);
 		
 		selectedEggFruitCount = new JLabel();
 		selectedEggFruitCount.setSize(new Dimension(300,16));
-		selectedEggFruitCount.setLocation(700,60);
+		selectedEggFruitCount.setLocation(700,360);
 		panel.add(selectedEggFruitCount);
 		
 		for(int i = 0; i < 7; i++) {
 			selectedEggFruitPreferences[i] = new JLabel();
-			selectedEggFruitPreferences[i].setIcon(GraphicsDriver.fruitIcons[i]);
+			selectedEggFruitPreferences[i].setIcon(Utils.scaleIcon(GraphicsDriver.fruitIcons[i], 64, 64));
 			selectedEggFruitPreferences[i].setSize(64,64);
-			selectedEggFruitPreferences[i].setLocation(700 + ((i%4)*70), 80 + ((i/4)*84));
+			selectedEggFruitPreferences[i].setLocation(700 + ((i%4)*70), 380 + ((i/4)*70));
+			selectedEggFruitPreferences[i].setEnabled(false);
 			panel.add(selectedEggFruitPreferences[i]);
 		}
 		
 		levelSelectButton = new JButton("Level Select");
-		levelSelectButton.setSize(200,64);
-		levelSelectButton.setLocation(700,300);
+		levelSelectButton.setSize(300,48);
+		levelSelectButton.setLocation(700,520);
 		levelSelectButton.addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {clear(); Dashboard.switchPane();}});
 		panel.add(levelSelectButton);
 	}

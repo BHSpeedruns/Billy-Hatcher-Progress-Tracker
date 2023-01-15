@@ -186,6 +186,10 @@ public class LevelSelect {
 				eggsInLevel[i].setVisible(true);
 				eggsInLevel[i].setIcon(Utils.scaleIcon(GraphicsDriver.eggIcons[eggs[i]], 64, 64));
 				
+				if(GameDataLookup.getIsSonicEgg(eggs[i])) {
+					eggsInLevel[i].setToolTipText("Requires "+GameDataLookup.getSonicEggChickCoinRequirement(eggs[i])+" Chick Coins");
+				}
+				
 				if(ProgressTracker.gamestate.getEggHatched(eggs[i])) {
 					eggsHatchedCheckmarks[i].setEnabled(true);
 					eggsHatchedCheckmarks[i].setVisible(true);

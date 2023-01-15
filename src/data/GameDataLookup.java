@@ -474,6 +474,22 @@ public class GameDataLookup {
 	};
 	public static final boolean[] getEggFruitPreferences(int eggID) { return eggFruitPreferences[eggID]; }
 	
+	public static final int[] sonicEggChickCoinRequirements = {
+		60,
+		140,
+		220,
+		20,
+		80,
+		40,
+		180,
+		100
+	};
+	public static final int getSonicEggChickCoinRequirement(int eggID) {
+		if(!getIsSonicEgg(eggID)){return 0;}
+		return sonicEggChickCoinRequirements[eggID-55];
+	}
+	public static final boolean getIsSonicEgg(int eggID) { return eggID >= 55 && eggID <= 62; }
+	
 	public static final int NUM_COINS_PER_LEVEL = 5;
 	public static final String[][] chickCoinNotes = {
 			new String[]{"Coin beside chick after first gate",
