@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Color;
+import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -82,8 +83,8 @@ public class GraphicsDriver {
 	}
 	
 	public static void openMissionMap(int level) {
-		double tWidth = 1428;
-		double tHeight = 816;
+		double tWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		double tHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		if(!largeMaps) {tWidth *= 0.6; tHeight *= 0.6;}
 
 		final int width = (int) tWidth;
