@@ -84,6 +84,14 @@ public class Dashboard {
 			}
 		});
 		menu.add(menuItem);
+		menuItem = new JMenuItem("Toggle Small Maps");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				GraphicsDriver.largeMaps = !GraphicsDriver.largeMaps;
+				GraphicsDriver.update();
+			}
+		});
+		menu.add(menuItem);
 		menuBar.add(menu);
 		frame.setJMenuBar(menuBar);
 		

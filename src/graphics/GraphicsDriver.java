@@ -29,6 +29,7 @@ public class GraphicsDriver {
 	// Graphics Settings
 	public static boolean darkMode;
 	public static boolean warningsEnabled;
+	public static boolean largeMaps;
 	
 	static {
 		chickCoin = new ImageIcon("assets/misc/chickcoin.png","Chick Coin");
@@ -66,6 +67,7 @@ public class GraphicsDriver {
 		javax.swing.ToolTipManager.sharedInstance().setInitialDelay(100);
 		darkMode = true;
 		warningsEnabled = true;
+		largeMaps = true;
 	}
 	
 	public void initialize() {
@@ -80,9 +82,13 @@ public class GraphicsDriver {
 	}
 	
 	public static void openMissionMap(int level) {
-		final int width = 1428;
-		final int height = 816;
-		
+		double tWidth = 1428;
+		double tHeight = 816;
+		if(!largeMaps) {tWidth *= 0.6; tHeight *= 0.6;}
+
+		final int width = (int) tWidth;
+		final int height = (int) tHeight;
+
 		JLabel map = new JLabel();
 		map.setIcon(Utils.scaleIcon(missionMaps[level],width-64,height-64));
 		
