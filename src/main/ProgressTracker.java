@@ -6,7 +6,6 @@ import java.net.URL;
 
 import data.GameState;
 import graphics.GraphicsDriver;
-import test.TestDriver;
 
 public final class ProgressTracker {
 	
@@ -21,9 +20,8 @@ public final class ProgressTracker {
 //	private long newTime;
 	
 	
-	private GraphicsDriver graphics = new GraphicsDriver(); 
-	private GameState gamestate = new GameState();
-	private TestDriver test = new TestDriver();
+	public static GraphicsDriver graphics = new GraphicsDriver(); 
+	public static GameState gamestate = new GameState();
 	
 	public static void main(String[]args) { new ProgressTracker(); }
 
@@ -38,9 +36,7 @@ public final class ProgressTracker {
 		checkVersion();
 		
 		gamestate.initialize();
-		graphics.initialize(gamestate); 
-		
-		test.initialize(graphics, gamestate); //This should probably use a different gamestate
+		graphics.initialize();
 		
 //		lastTime = System.nanoTime();
 	}
@@ -71,11 +67,5 @@ public final class ProgressTracker {
 			//FIXME: a lock??
 			try { Thread.sleep(10); } catch(Exception e) {}
 		}
-	}
-
-	private void runTests() {
-		test.testLevelUnlockSystem();
-		test.testEggHatchSystem();
-		test.testChickCoinSystem();
 	}
 }
