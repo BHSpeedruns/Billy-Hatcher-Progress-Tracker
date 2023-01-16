@@ -28,7 +28,6 @@ public class EggGallery {
 	
 	JButton[] eggButtons = new JButton[72];
 	JLabel selectedEggImage;
-	JLabel selectedEggName;
 	JLabel selectedEggLevels; // TODO: JButtons to open maps?
 	JLabel selectedEggFruitCount;
 	JLabel[] selectedEggFruitPreferences = new JLabel[7];
@@ -61,36 +60,30 @@ public class EggGallery {
 		selectedEggImage.setLocation(680, 0);
 		panel.add(selectedEggImage);
 		
-		selectedEggName = new JLabel();
-		selectedEggName.setForeground(Color.WHITE);
-		selectedEggName.setSize(new Dimension(300,16));
-		selectedEggName.setLocation(700,320);
-		panel.add(selectedEggName);
-		
 		selectedEggLevels = new JLabel();
 		selectedEggLevels.setForeground(Color.WHITE);
-		selectedEggLevels.setSize(new Dimension(300,16));
-		selectedEggLevels.setLocation(700,340);
+		selectedEggLevels.setSize(new Dimension(320,110));
+		selectedEggLevels.setLocation(680,260);
 		panel.add(selectedEggLevels);
 		
 		selectedEggFruitCount = new JLabel();
 		selectedEggFruitCount.setForeground(Color.WHITE);
-		selectedEggFruitCount.setSize(new Dimension(300,16));
-		selectedEggFruitCount.setLocation(700,360);
+		selectedEggFruitCount.setSize(new Dimension(320,16));
+		selectedEggFruitCount.setLocation(680,370);
 		panel.add(selectedEggFruitCount);
 		
 		for(int i = 0; i < 7; i++) {
 			selectedEggFruitPreferences[i] = new JLabel();
 			selectedEggFruitPreferences[i].setIcon(Utils.scaleIcon(GraphicsDriver.fruitIcons[i], 64, 64));
 			selectedEggFruitPreferences[i].setSize(64,64);
-			selectedEggFruitPreferences[i].setLocation(700 + ((i%4)*70), 380 + ((i/4)*70));
+			selectedEggFruitPreferences[i].setLocation(680 + ((i%4)*70), 386 + ((i/4)*70));
 			selectedEggFruitPreferences[i].setEnabled(false);
 			panel.add(selectedEggFruitPreferences[i]);
 		}
 		
 		levelSelectButton = new JButton("Level Select");
-		levelSelectButton.setSize(300,48);
-		levelSelectButton.setLocation(700,520);
+		levelSelectButton.setSize(320,48);
+		levelSelectButton.setLocation(680,530);
 		levelSelectButton.addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {clear(); Dashboard.switchPane();}});
 		panel.add(levelSelectButton);
 	}
@@ -100,9 +93,8 @@ public class EggGallery {
 		
 		selectedEggImage.setIcon(Utils.scaleIcon(GraphicsDriver.eggIcons[currentEgg], 300, 300));
 		selectedEggImage.setEnabled(true);
-		selectedEggName.setText(GameDataLookup.getEggName(currentEgg));
-		selectedEggName.setEnabled(true);
-		selectedEggLevels.setText(Arrays.toString(Utils.levelIndiciesToWorldMissionPairs(GameDataLookup.getEggLocations(currentEgg))));
+		String levels = Arrays.toString(Utils.levelIndiciesToWorldMissionPairs(GameDataLookup.getEggLocations(currentEgg)));
+		selectedEggLevels.setText("<html><p>"+GameDataLookup.getEggName(currentEgg)+"</p><p>"+levels+"</p></html>");
 		selectedEggLevels.setEnabled(true);
 		selectedEggFruitCount.setText("Fruit Required to Hatch: "+GameDataLookup.getEggFruitCount(currentEgg));
 		selectedEggFruitCount.setEnabled(true);
@@ -116,7 +108,6 @@ public class EggGallery {
 		currentEgg = -1;
 		
 		selectedEggImage.setIcon(null);
-		selectedEggName.setText("");
 		selectedEggLevels.setText("");
 		selectedEggFruitCount.setText("");
 		for(int i = 0; i < 7; i++) {

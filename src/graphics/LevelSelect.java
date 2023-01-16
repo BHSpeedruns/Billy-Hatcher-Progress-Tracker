@@ -12,9 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
 
 import data.GameDataLookup;
 import data.Level;
@@ -87,7 +85,7 @@ public class LevelSelect {
 		}
 		
 		rankSelectDropdown = new JComboBox<ImageIcon>(GraphicsDriver.rankIcons);
-		rankSelectDropdown.setSize(64,64);
+		rankSelectDropdown.setSize(84,64);
 		rankSelectDropdown.setLocation(580, 200);
 		rankSelectDropdown.addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {missionRankSelected();}});
 		panel.add(rankSelectDropdown); //TODO: probably need a custom renderer?
