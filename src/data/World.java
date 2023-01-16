@@ -1,6 +1,6 @@
 package data;
 
-public class World {
+public class World implements java.io.Serializable {
 	
 	private int ID;
 	private Level[] levels = new Level[GameDataLookup.LEVELS_PER_WORLD];

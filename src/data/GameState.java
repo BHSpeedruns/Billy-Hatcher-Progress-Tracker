@@ -2,7 +2,7 @@ package data;
 
 import java.util.ArrayList;
 
-public final class GameState {
+public final class GameState implements java.io.Serializable {
 	
 	private int courageEmblems 	= 0;
 	

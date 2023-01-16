@@ -66,6 +66,7 @@ public class GraphicsDriver {
 	}
 	
 	public static void update() {
+		//FIXME: static & instance update mixed due to checkmarks on eggs being shared... not great.
 		dash.update();
 		summary.update();
 	}

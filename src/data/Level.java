@@ -1,6 +1,6 @@
 package data;
 
-public class Level {
+public class Level implements java.io.Serializable {
 	private int			ID;
 	private boolean[] 	chickCoinsCollected = new boolean[5];
 	private Rank 		highestRank;

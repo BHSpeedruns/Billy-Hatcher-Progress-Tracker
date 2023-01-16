@@ -131,3 +131,4 @@ fabric.properties
 .gradle/
 build/
 /target/
+/saves/
