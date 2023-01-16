@@ -145,8 +145,12 @@ public class LevelSelect {
 	public void update() {
 		
 		// Update World Text & Level Text
-		currentWorldText.setText("World: "+(currentWorld + 1));
-		currentMissionText.setText("Mission: "+(currentMission + 1));
+		if(currentWorld != -1) {
+			currentWorldText.setText("World: "+(currentWorld + 1));
+		}
+		if(currentMission != -1) {
+			currentMissionText.setText("Mission: "+(currentMission + 1));
+		}
 		
 		if(currentWorld == -1 || currentMission == -1) { return; }
 		
@@ -216,11 +220,7 @@ public class LevelSelect {
 				}
 				
 				if(ProgressTracker.gamestate.getEggHatched(eggs[i])) {
-					BufferedImage temp = new BufferedImage(egg.getIconWidth(), egg.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-					Graphics2D g = temp.createGraphics();
-					g.drawImage(egg.getImage(), 0, 0, null);
-					g.drawImage(Utils.scaleIcon(GraphicsDriver.checkmark,64,64).getImage(), 0, 0, null);
-					egg.setImage(temp);
+					Utils.overlayImageOn(egg, Utils.scaleIcon(GraphicsDriver.checkmark, 64, 64), 0, 0);
 				}
 				
 				eggsInLevel[i].setIcon(egg);

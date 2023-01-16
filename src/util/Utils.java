@@ -1,7 +1,9 @@
 package util;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,11 +44,18 @@ public class Utils {
 		return new ImageIcon(image.getImage().getScaledInstance(newWidth, newHeight, java.awt.Image.SCALE_SMOOTH));
 	}
 	
+	public final static void overlayImageOn(ImageIcon background, ImageIcon foreground, int xPos, int yPos) {
+		BufferedImage temp = new BufferedImage(background.getIconWidth(), background.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = temp.createGraphics();
+		g.drawImage(background.getImage(), 0, 0, null);
+		g.drawImage(foreground.getImage(), xPos, yPos, null);
+		background.setImage(temp);
+	}
+	
 	public static String[] splitAndKeepDelimiters(String s, String split, boolean regex){
 		if(regex){return splitAndKeepDelimitersRegex(s,split);}
 		return splitAndKeepDelimitersString(s,split);
 	}
-
 	private static String[] splitAndKeepDelimitersString(String s, String split){
 		String[] arr1 = s.split(split);
 		String[] arr2 = new String[arr1.length*2 - 1];

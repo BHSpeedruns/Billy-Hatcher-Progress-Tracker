@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import data.GameDataLookup;
+import main.ProgressTracker;
 import util.Utils;
 
 public class EggGallery {
@@ -89,10 +90,23 @@ public class EggGallery {
 	}
 
 	public void update() {
+		ImageIcon check = Utils.scaleIcon(GraphicsDriver.checkmark, 48, 48);
+		for(int i = 0; i < 72; i++) {
+			if(ProgressTracker.gamestate.getEggHatched(i)) {
+				ImageIcon eggIcon = Utils.scaleIcon(GraphicsDriver.eggIcons[i],64,64);
+				Utils.overlayImageOn(eggIcon, check, 24, 16);
+				eggButtons[i].setIcon(eggIcon);
+			}
+		}
+		
 		if(currentEgg == -1) { return; }
 		
-		selectedEggImage.setIcon(Utils.scaleIcon(GraphicsDriver.eggIcons[currentEgg], 300, 300));
+		ImageIcon egg = Utils.scaleIcon(GraphicsDriver.eggIcons[currentEgg], 300, 300);
+		ImageIcon item = Utils.scaleIcon(GraphicsDriver.itemIcons[currentEgg], 100, 100);
+		Utils.overlayImageOn(egg, item, 200, 180);
+		selectedEggImage.setIcon(egg);
 		selectedEggImage.setEnabled(true);
+		
 		String levels = Arrays.toString(Utils.levelIndiciesToWorldMissionPairs(GameDataLookup.getEggLocations(currentEgg)));
 		selectedEggLevels.setText("<html><p>"+GameDataLookup.getEggName(currentEgg)+"</p><p>"+levels+"</p></html>");
 		selectedEggLevels.setEnabled(true);

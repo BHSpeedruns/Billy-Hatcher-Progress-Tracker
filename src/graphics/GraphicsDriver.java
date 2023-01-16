@@ -22,6 +22,7 @@ public class GraphicsDriver {
 	public static ImageIcon checkmark;
 	public static ImageIcon[] worldIcons = new ImageIcon[7];
 	public static ImageIcon[] eggIcons = new ImageIcon[72];
+	public static ImageIcon[] itemIcons = new ImageIcon[72];
 	public static ImageIcon[] rankIcons = new ImageIcon[6];
 	public static ImageIcon[] fruitIcons = new ImageIcon[7];
 	public static ImageIcon[] missionMaps = new ImageIcon[56];
@@ -42,12 +43,15 @@ public class GraphicsDriver {
 			eggIcons[i] = new ImageIcon("assets/Egg PNGs/Numbered/"+(i+1)+".png", GameDataLookup.getEggName(i));
 		}
 		
+		for(int i = 0; i < itemIcons.length; i++) {
+			itemIcons[i] = new ImageIcon("assets/animals items/"+(i+1)+".png", GameDataLookup.getEggName(i));
+		}
+		
 		for(int i = 0; i < rankIcons.length; i++) {
 			rankIcons[i] = new ImageIcon("assets/misc/rank"+(Rank.values()[i].name())+".png");
 		}
 		
 		for(int i = 0; i < fruitIcons.length; i++) {
-			//added small & full resolution fruits
 			fruitIcons[i] = new ImageIcon("assets/misc/"+GameDataLookup.getFruits()[i]+".png");
 		}
 		

@@ -42,7 +42,7 @@ public class Dashboard {
 		frame.setVisible(true);
 	}
 	
-	public void update() {
+	public static void update() {
 		if(onLevelSelect) {levelSelect.update();}
 		else {eggGallery.update();}
 	}
@@ -50,5 +50,6 @@ public class Dashboard {
 	public static void switchPane() {
 		layout.next(panel);
 		onLevelSelect = !onLevelSelect;
+		update();
 	}
 }
