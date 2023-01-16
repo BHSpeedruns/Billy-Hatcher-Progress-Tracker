@@ -47,7 +47,7 @@ public class LevelSelect {
 	
 	
 	public void initialize() {
-		panel.setBackground(Color.BLACK);
+		panel.setBackground(GraphicsDriver.getBackgroundColor());
 		panel.setLayout(null);
 		
 		currentWorldIcon = new JLabel();
@@ -56,19 +56,16 @@ public class LevelSelect {
 		panel.add(currentWorldIcon);
 		
 		currentWorldText = new JLabel();
-		currentWorldText.setForeground(Color.WHITE);
 		currentWorldText.setSize(64, 32);
 		currentWorldText.setLocation(580, 20);
 		panel.add(currentWorldText);
 		
 		currentMissionText = new JLabel();
-		currentMissionText.setForeground(Color.WHITE);
 		currentMissionText.setSize(64, 32);
 		currentMissionText.setLocation(665, 20);
 		panel.add(currentMissionText);
 		
 		currentLevelTitleText = new JLabel();
-		currentLevelTitleText.setForeground(Color.WHITE);
 		currentLevelTitleText.setSize(500, 32);
 		currentLevelTitleText.setLocation(580, 94);		
 		panel.add(currentLevelTitleText);
@@ -143,13 +140,16 @@ public class LevelSelect {
 	}
 
 	public void update() {
+		panel.setBackground(GraphicsDriver.getBackgroundColor());
 		
 		// Update World Text & Level Text
 		if(currentWorld != -1) {
 			currentWorldText.setText("World: "+(currentWorld + 1));
+			currentWorldText.setForeground(GraphicsDriver.getTextColor());
 		}
 		if(currentMission != -1) {
 			currentMissionText.setText("Mission: "+(currentMission + 1));
+			currentMissionText.setForeground(GraphicsDriver.getTextColor());
 		}
 		
 		if(currentWorld == -1 || currentMission == -1) { return; }
@@ -181,14 +181,16 @@ public class LevelSelect {
 			// Update Level Title
 			currentLevelTitleText.setEnabled(true);
 			currentLevelTitleText.setText(GameDataLookup.getFullLevelName(currentLevel));
-			
-			// Warning Text
-			if(thisLevel.getState() == LevelState.INACCESSIBLE) {
-				levelUnlockWarningText.setVisible(true);
-			}
-			else {
-				levelUnlockWarningText.setVisible(false);
-			}
+		}
+		
+		currentLevelTitleText.setForeground(GraphicsDriver.getTextColor());
+		
+		// Warning Text
+		if(GraphicsDriver.warningsEnabled && thisLevel.getState() == LevelState.INACCESSIBLE) {
+			levelUnlockWarningText.setVisible(true);
+		}
+		else {
+			levelUnlockWarningText.setVisible(false);
 		}
 		
 		// Update Chick Coins

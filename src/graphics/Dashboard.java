@@ -65,6 +65,25 @@ public class Dashboard {
 		});
 		menu.add(menuItem);
 		menuBar.add(menu);
+
+		menu = new JMenu("View");
+		menuItem = new JMenuItem("Toggle Dark Mode");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				GraphicsDriver.darkMode = !GraphicsDriver.darkMode;
+				GraphicsDriver.update();
+			}
+		});
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Toggle Warnings");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				GraphicsDriver.warningsEnabled = !GraphicsDriver.warningsEnabled;
+				GraphicsDriver.update();
+			}
+		});
+		menu.add(menuItem);
+		menuBar.add(menu);
 		frame.setJMenuBar(menuBar);
 		
 		frame.setVisible(true);

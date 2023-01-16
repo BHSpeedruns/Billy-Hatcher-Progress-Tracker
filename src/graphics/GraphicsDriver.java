@@ -1,7 +1,6 @@
 package graphics;
 
-
-import java.awt.Dimension;
+import java.awt.Color;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -26,6 +25,10 @@ public class GraphicsDriver {
 	public static ImageIcon[] rankIcons = new ImageIcon[6];
 	public static ImageIcon[] fruitIcons = new ImageIcon[7];
 	public static ImageIcon[] missionMaps = new ImageIcon[56];
+	
+	// Graphics Settings
+	public static boolean darkMode;
+	public static boolean warningsEnabled;
 	
 	static {
 		chickCoin = new ImageIcon("assets/misc/chickcoin.png","Chick Coin");
@@ -58,6 +61,11 @@ public class GraphicsDriver {
 		for(int i = 0; i < missionMaps.length; i++) {
 			missionMaps[i] = new ImageIcon("assets/maps/"+GameDataLookup.getLevelNumberFormat(i).replaceAll(" ", "")+".png");
 		}
+		
+		// Global Settings
+		javax.swing.ToolTipManager.sharedInstance().setInitialDelay(100);
+		darkMode = true;
+		warningsEnabled = true;
 	}
 	
 	public void initialize() {
@@ -87,5 +95,14 @@ public class GraphicsDriver {
 		popup.setSize(width, height); // 1.75 factor. Might not fit all maps well.
 		popup.setLocationRelativeTo(null);
 		popup.setVisible(true);
+	}
+	
+	public static Color getBackgroundColor() {
+		if(darkMode) { return Color.BLACK; }
+		return Color.WHITE;
+	}
+	public static Color getTextColor() {
+		if(darkMode) { return Color.WHITE; }
+		return Color.BLACK;
 	}
 }

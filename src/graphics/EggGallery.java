@@ -1,15 +1,10 @@
 package graphics;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-
-import java.awt.Image;
-import java.awt.LayoutManager;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,7 +32,7 @@ public class EggGallery {
 	
 	public void initialize() {
 		panel.setPreferredSize(new Dimension(1020,620));
-		panel.setBackground(Color.BLACK);
+		panel.setBackground(GraphicsDriver.getBackgroundColor());
 		panel.setLayout(null);
 		
 		for(int i = 0; i < 72; i++) {
@@ -62,13 +57,11 @@ public class EggGallery {
 		panel.add(selectedEggImage);
 		
 		selectedEggLevels = new JLabel();
-		selectedEggLevels.setForeground(Color.WHITE);
 		selectedEggLevels.setSize(new Dimension(320,110));
 		selectedEggLevels.setLocation(680,260);
 		panel.add(selectedEggLevels);
 		
 		selectedEggFruitCount = new JLabel();
-		selectedEggFruitCount.setForeground(Color.WHITE);
 		selectedEggFruitCount.setSize(new Dimension(320,16));
 		selectedEggFruitCount.setLocation(680,370);
 		panel.add(selectedEggFruitCount);
@@ -90,6 +83,8 @@ public class EggGallery {
 	}
 
 	public void update() {
+		panel.setBackground(GraphicsDriver.getBackgroundColor());
+		
 		ImageIcon check = Utils.scaleIcon(GraphicsDriver.checkmark, 48, 48);
 		for(int i = 0; i < 72; i++) {
 			if(ProgressTracker.gamestate.getEggHatched(i)) {
@@ -109,8 +104,10 @@ public class EggGallery {
 		
 		String levels = Arrays.toString(Utils.levelIndiciesToWorldMissionPairs(GameDataLookup.getEggLocations(currentEgg)));
 		selectedEggLevels.setText("<html><p>"+GameDataLookup.getEggName(currentEgg)+"</p><p>"+levels+"</p></html>");
+		selectedEggLevels.setForeground(GraphicsDriver.getTextColor());
 		selectedEggLevels.setEnabled(true);
 		selectedEggFruitCount.setText("Fruit Required to Hatch: "+GameDataLookup.getEggFruitCount(currentEgg));
+		selectedEggFruitCount.setForeground(GraphicsDriver.getTextColor());
 		selectedEggFruitCount.setEnabled(true);
 		boolean[] preferences = GameDataLookup.getEggFruitPreferences(currentEgg);
 		for(int i = 0; i < 7; i++) {
