@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -11,7 +12,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
 
 import data.GameDataLookup;
 import data.Level;
@@ -35,7 +38,7 @@ public class LevelSelect {
 	JLabel currentMissionText;
 	JLabel currentLevelTitleText;
 	JButton[] eggsInLevel = new JButton[15]; // The level with the most distinct eggs has 15 eggs
-	JComboBox<Rank> rankSelectDropdown;
+	JComboBox<ImageIcon> rankSelectDropdown;
 	JButton[] coinSelectButtons = new JButton[5];
 	JButton missionMapButton;
 	JButton[] missionSelectButtons = new JButton[8];
@@ -83,7 +86,7 @@ public class LevelSelect {
 			eggsInLevel[i].setVisible(false);
 		}
 		
-		rankSelectDropdown = new JComboBox<Rank>(new Rank[] {Rank.NORANK, Rank.D, Rank.C, Rank.B, Rank.A, Rank.S});
+		rankSelectDropdown = new JComboBox<ImageIcon>(GraphicsDriver.rankIcons);
 		rankSelectDropdown.setSize(64,64);
 		rankSelectDropdown.setLocation(580, 200);
 		rankSelectDropdown.addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {missionRankSelected();}});
@@ -159,7 +162,14 @@ public class LevelSelect {
 			
 		if(swappedLevels) {
 			rankEditListening = false;
-			rankSelectDropdown.setSelectedItem(thisLevel.getRank());
+			Rank r = thisLevel.getRank();
+			int index = 0;
+			for(index = 0; index< Rank.values().length; index++) {
+				if(r == Rank.values()[index]) {
+					break;
+				}
+			}
+			rankSelectDropdown.setSelectedItem(GraphicsDriver.rankIcons[index]);
 			rankEditListening = true;
 			
 			// Update World Banner
@@ -198,7 +208,7 @@ public class LevelSelect {
 		int[] eggs = GameDataLookup.getEggsInLevel(currentLevel);
 		for(int i = 0; i < 15; i++) {
 			if(i < eggs.length) {
-				ImageIcon egg = Utils.scaleIcon(GraphicsDriver.eggIcons[i], 64, 64);
+				ImageIcon egg = Utils.scaleIcon(GraphicsDriver.eggIcons[eggs[i]], 64, 64);
 				eggsInLevel[i].setEnabled(true);
 				eggsInLevel[i].setVisible(true);
 				
@@ -268,7 +278,15 @@ public class LevelSelect {
 	}
 	private void missionRankSelected() {
 		if(!rankEditListening) { return; }
-		ProgressTracker.gamestate.completeLevel(currentLevel, (Rank) rankSelectDropdown.getSelectedItem());
+		ImageIcon selected = (ImageIcon) rankSelectDropdown.getSelectedItem();
+		int index = 0;
+		for(index = 0; index < GraphicsDriver.rankIcons.length; index++) {
+			if(GraphicsDriver.rankIcons[index] == selected) {
+				break;
+			}
+		}
+		
+		ProgressTracker.gamestate.completeLevel(currentLevel, Rank.values()[index]);
 		GraphicsDriver.update();
 	}
 }
