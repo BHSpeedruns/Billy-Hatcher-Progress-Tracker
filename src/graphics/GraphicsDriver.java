@@ -86,6 +86,7 @@ public class GraphicsDriver {
 		double tWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double tHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		if(!largeMaps) {tWidth *= 0.6; tHeight *= 0.6;}
+		else {tWidth *= 0.9; tHeight *= 0.9;}
 
 		final int width = (int) tWidth;
 		final int height = (int) tHeight;
@@ -99,7 +100,7 @@ public class GraphicsDriver {
 		JFrame popup = new JFrame();
 		popup.add(pane);
 		popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		popup.setSize(width, height); // 1.75 factor. Might not fit all maps well.
+		popup.setSize(width, height);
 		popup.setLocationRelativeTo(null);
 		popup.setVisible(true);
 	}

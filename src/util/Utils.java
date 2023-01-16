@@ -38,7 +38,15 @@ public class Utils {
 	public final static Icon scaleIcon(ImageIcon imageIcon, Dimension eggButton) {
 		return scaleIcon(imageIcon, eggButton.width, eggButton.height);
 	}
-	public final static ImageIcon scaleIcon(ImageIcon image, int newWidth, int newHeight) {
+	public final static ImageIcon scaleIcon(ImageIcon image, int newMaxWidth, int newMaxHeight) {
+		double factor = Math.max(image.getIconHeight()*1.0 / newMaxHeight, image.getIconWidth()*1.0 / newMaxWidth);
+		
+		int newWidth = (int) Math.floor(image.getIconWidth() / factor);
+		int newHeight = (int) Math.floor(image.getIconHeight() / factor);
+	
+		return new ImageIcon(image.getImage().getScaledInstance(newWidth, newHeight, java.awt.Image.SCALE_SMOOTH));
+	}
+	public final static ImageIcon forceFitIcon(ImageIcon image, int newWidth, int newHeight) {
 		return new ImageIcon(image.getImage().getScaledInstance(newWidth, newHeight, java.awt.Image.SCALE_SMOOTH));
 	}
 	
