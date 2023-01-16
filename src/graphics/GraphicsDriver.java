@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import data.GameDataLookup;
 import data.Rank;
+import util.Utils;
 
 public class GraphicsDriver {
 	
@@ -66,10 +67,11 @@ public class GraphicsDriver {
 	}
 	
 	public static void openMissionMap(int level) {
-		// TODO: resize if larger than screen or find max and scale to that?
+		final int width = 1428;
+		final int height = 816;
 		
 		JLabel map = new JLabel();
-		map.setIcon(missionMaps[level]);
+		map.setIcon(Utils.scaleIcon(missionMaps[level],width-64,height-64));
 		
 		JPanel pane = new JPanel();
 		pane.add(map);
@@ -77,7 +79,7 @@ public class GraphicsDriver {
 		JFrame popup = new JFrame();
 		popup.add(pane);
 		popup.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		popup.setSize(new Dimension(missionMaps[level].getIconWidth() + 64,missionMaps[level].getIconHeight() + 64));
+		popup.setSize(width, height); // 1.75 factor. Might not fit all maps well.
 		popup.setLocationRelativeTo(null);
 		popup.setVisible(true);
 	}

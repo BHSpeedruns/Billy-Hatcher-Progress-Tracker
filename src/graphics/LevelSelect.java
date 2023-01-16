@@ -2,9 +2,12 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -12,6 +15,7 @@ import javax.swing.JPanel;
 
 import data.GameDataLookup;
 import data.Level;
+import data.LevelState;
 import data.Rank;
 import main.ProgressTracker;
 import util.Utils;
@@ -24,12 +28,13 @@ public class LevelSelect {
 	int currentMission = -1;
 	int currentLevel = -1;
 
+	boolean rankEditListening = true;
+	
 	JLabel currentWorldIcon;
 	JLabel currentWorldText;
-	JLabel currentLevelText;
+	JLabel currentMissionText;
 	JLabel currentLevelTitleText;
 	JButton[] eggsInLevel = new JButton[15]; // The level with the most distinct eggs has 15 eggs
-	JLabel[] eggsHatchedCheckmarks = new JLabel[15];
 	JComboBox<Rank> rankSelectDropdown;
 	JButton[] coinSelectButtons = new JButton[5];
 	JButton missionMapButton;
@@ -37,7 +42,11 @@ public class LevelSelect {
 	JButton eggGalleryButton;
 	JButton[] worldSelectButtons = new JButton[7];
 	
+	JLabel levelUnlockWarningText;
+	
+	
 	public void initialize() {
+		panel.setBackground(Color.BLACK);
 		panel.setLayout(null);
 		
 		currentWorldIcon = new JLabel();
@@ -46,16 +55,19 @@ public class LevelSelect {
 		panel.add(currentWorldIcon);
 		
 		currentWorldText = new JLabel();
+		currentWorldText.setForeground(Color.WHITE);
 		currentWorldText.setSize(64, 32);
 		currentWorldText.setLocation(580, 20);
 		panel.add(currentWorldText);
 		
-		currentLevelText = new JLabel();
-		currentLevelText.setSize(64, 32);
-		currentLevelText.setLocation(665, 20);
-		panel.add(currentLevelText);
+		currentMissionText = new JLabel();
+		currentMissionText.setForeground(Color.WHITE);
+		currentMissionText.setSize(64, 32);
+		currentMissionText.setLocation(665, 20);
+		panel.add(currentMissionText);
 		
 		currentLevelTitleText = new JLabel();
+		currentLevelTitleText.setForeground(Color.WHITE);
 		currentLevelTitleText.setSize(500, 32);
 		currentLevelTitleText.setLocation(580, 94);		
 		panel.add(currentLevelTitleText);
@@ -69,13 +81,6 @@ public class LevelSelect {
 			panel.add(eggsInLevel[i]);
 			eggsInLevel[i].setEnabled(false);
 			eggsInLevel[i].setVisible(false);
-			
-			
-			eggsHatchedCheckmarks[i] = new JLabel();
-			eggsHatchedCheckmarks[i].setSize(64,64);
-			eggsHatchedCheckmarks[i].setIcon(Utils.scaleIcon(GraphicsDriver.checkmark,64,64));
-			eggsHatchedCheckmarks[i].setEnabled(false);
-			eggsHatchedCheckmarks[i].setVisible(false);
 		}
 		
 		rankSelectDropdown = new JComboBox<Rank>(new Rank[] {Rank.NORANK, Rank.D, Rank.C, Rank.B, Rank.A, Rank.S});
@@ -126,14 +131,21 @@ public class LevelSelect {
 			worldSelectButtons[i].addActionListener(new ActionListener() {public void actionPerformed(ActionEvent e) {worldButtonSelected(j);}});
 			panel.add(worldSelectButtons[i]);
 		}
+		
+		levelUnlockWarningText = new JLabel();
+		levelUnlockWarningText.setText("WARNING: This level is not currently unlocked/beatable");
+		levelUnlockWarningText.setForeground(Color.RED);
+		levelUnlockWarningText.setSize(600, 32);
+		levelUnlockWarningText.setLocation(10,400);
+		levelUnlockWarningText.setVisible(false);
+		panel.add(levelUnlockWarningText);
 	}
 
 	public void update() {
-		// FIXME: picking level counts as completing it?
 		
 		// Update World Text & Level Text
 		currentWorldText.setText("World: "+(currentWorld + 1));
-		currentLevelText.setText("Mission: "+(currentMission + 1));
+		currentMissionText.setText("Mission: "+(currentMission + 1));
 		
 		if(currentWorld == -1 || currentMission == -1) { return; }
 		
@@ -146,20 +158,24 @@ public class LevelSelect {
 		Level thisLevel = ProgressTracker.gamestate.getLevel(currentLevel);
 			
 		if(swappedLevels) {
-			// FIXME: I believe this fires the actionlistener.
-			
+			rankEditListening = false;
 			rankSelectDropdown.setSelectedItem(thisLevel.getRank());
+			rankEditListening = true;
 			
 			// Update World Banner
-			if(swappedLevels) {
-				currentWorldIcon.setEnabled(true);
-				currentWorldIcon.setIcon(GraphicsDriver.worldIcons[currentWorld]);
-			}
+			currentWorldIcon.setEnabled(true);
+			currentWorldIcon.setIcon(GraphicsDriver.worldIcons[currentWorld]);
 			
 			// Update Level Title
-			if(swappedLevels) {
-				currentLevelTitleText.setEnabled(true);
-				currentLevelTitleText.setText(GameDataLookup.getFullLevelName(currentLevel));
+			currentLevelTitleText.setEnabled(true);
+			currentLevelTitleText.setText(GameDataLookup.getFullLevelName(currentLevel));
+			
+			// Warning Text
+			if(thisLevel.getState() == LevelState.INACCESSIBLE) {
+				levelUnlockWarningText.setVisible(true);
+			}
+			else {
+				levelUnlockWarningText.setVisible(false);
 			}
 		}
 		
@@ -182,18 +198,24 @@ public class LevelSelect {
 		int[] eggs = GameDataLookup.getEggsInLevel(currentLevel);
 		for(int i = 0; i < 15; i++) {
 			if(i < eggs.length) {
+				ImageIcon egg = Utils.scaleIcon(GraphicsDriver.eggIcons[i], 64, 64);
 				eggsInLevel[i].setEnabled(true);
 				eggsInLevel[i].setVisible(true);
-				eggsInLevel[i].setIcon(Utils.scaleIcon(GraphicsDriver.eggIcons[eggs[i]], 64, 64));
+				
 				
 				if(GameDataLookup.getIsSonicEgg(eggs[i])) {
 					eggsInLevel[i].setToolTipText("Requires "+GameDataLookup.getSonicEggChickCoinRequirement(eggs[i])+" Chick Coins");
 				}
 				
 				if(ProgressTracker.gamestate.getEggHatched(eggs[i])) {
-					eggsHatchedCheckmarks[i].setEnabled(true);
-					eggsHatchedCheckmarks[i].setVisible(true);
+					BufferedImage temp = new BufferedImage(egg.getIconWidth(), egg.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+					Graphics2D g = temp.createGraphics();
+					g.drawImage(egg.getImage(), 0, 0, null);
+					g.drawImage(Utils.scaleIcon(GraphicsDriver.checkmark,64,64).getImage(), 0, 0, null);
+					egg.setImage(temp);
 				}
+				
+				eggsInLevel[i].setIcon(egg);
 			}
 			else {
 				eggsInLevel[i].setEnabled(false);
@@ -211,7 +233,27 @@ public class LevelSelect {
 	}
 	
 	public void clear() {
-		//TODO: implement
+		currentWorld = -1;
+		currentMission = -1;
+		currentLevel = -1;
+		
+		currentWorldText.setText("");
+		currentMissionText.setText("");
+		currentWorldIcon.setIcon(null);
+		rankSelectDropdown.setVisible(false);
+		rankSelectDropdown.setEnabled(false);
+		currentLevelTitleText.setText("");
+		for(int i = 0; i < 5; i++) {
+			coinSelectButtons[i].setVisible(false);
+			coinSelectButtons[i].setEnabled(false);
+		}
+		for(int i = 0; i < 15; i++) {
+			eggsInLevel[i].setEnabled(false);
+			eggsInLevel[i].setVisible(false);
+		}
+		missionMapButton.setEnabled(false);
+		missionMapButton.setVisible(false);
+		levelUnlockWarningText.setVisible(false);
 	}
 	
 	private void worldButtonSelected(int worldID) 		{ currentWorld = worldID; 		GraphicsDriver.update(); }
@@ -225,6 +267,7 @@ public class LevelSelect {
 		GraphicsDriver.update();
 	}
 	private void missionRankSelected() {
+		if(!rankEditListening) { return; }
 		ProgressTracker.gamestate.completeLevel(currentLevel, (Rank) rankSelectDropdown.getSelectedItem());
 		GraphicsDriver.update();
 	}

@@ -17,6 +17,7 @@ public final class GameState {
 	public void initialize() {
 		for(int i = 0; i < worlds.length; i++) { worlds[i] = new World(i); }
 		getLevel(0).setState(LevelState.INCOMPLETE); //first level is accessible by default
+		for(int i = 1; i < 56; i++) { getLevel(i).setState(LevelState.INACCESSIBLE); };
 	}
 
 	public int getNumCourageEmblems    (){ return courageEmblems;  }
@@ -47,7 +48,7 @@ public final class GameState {
 	private Level[] incompleteLevel(int level) {
 		Level levelCompleted = getLevel(level);
 
-		if(levelCompleted.getRank()!= Rank.NORANK) {
+		if(levelCompleted.getRank() != Rank.NORANK) {
 			
 			if(levelCompleted.getRank() == Rank.S) { decrementSRanks(); }
 			

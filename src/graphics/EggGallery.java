@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -36,6 +37,7 @@ public class EggGallery {
 	
 	public void initialize() {
 		panel.setPreferredSize(new Dimension(1020,620));
+		panel.setBackground(Color.BLACK);
 		panel.setLayout(null);
 		
 		for(int i = 0; i < 72; i++) {
@@ -60,16 +62,19 @@ public class EggGallery {
 		panel.add(selectedEggImage);
 		
 		selectedEggName = new JLabel();
+		selectedEggName.setForeground(Color.WHITE);
 		selectedEggName.setSize(new Dimension(300,16));
 		selectedEggName.setLocation(700,320);
 		panel.add(selectedEggName);
 		
 		selectedEggLevels = new JLabel();
+		selectedEggLevels.setForeground(Color.WHITE);
 		selectedEggLevels.setSize(new Dimension(300,16));
 		selectedEggLevels.setLocation(700,340);
 		panel.add(selectedEggLevels);
 		
 		selectedEggFruitCount = new JLabel();
+		selectedEggFruitCount.setForeground(Color.WHITE);
 		selectedEggFruitCount.setSize(new Dimension(300,16));
 		selectedEggFruitCount.setLocation(700,360);
 		panel.add(selectedEggFruitCount);
@@ -94,6 +99,7 @@ public class EggGallery {
 		if(currentEgg == -1) { return; }
 		
 		selectedEggImage.setIcon(Utils.scaleIcon(GraphicsDriver.eggIcons[currentEgg], 300, 300));
+		selectedEggImage.setEnabled(true);
 		selectedEggName.setText(GameDataLookup.getEggName(currentEgg));
 		selectedEggName.setEnabled(true);
 		selectedEggLevels.setText(Arrays.toString(Utils.levelIndiciesToWorldMissionPairs(GameDataLookup.getEggLocations(currentEgg))));
@@ -107,7 +113,15 @@ public class EggGallery {
 	}
 	
 	public void clear() {
-		//TODO: implement
+		currentEgg = -1;
+		
+		selectedEggImage.setIcon(null);
+		selectedEggName.setText("");
+		selectedEggLevels.setText("");
+		selectedEggFruitCount.setText("");
+		for(int i = 0; i < 7; i++) {
+			selectedEggFruitPreferences[i].setEnabled(false);
+		}
 	}
 	
 	private void eggButtonSelected(int eggID) { currentEgg = eggID; GraphicsDriver.update(); }
