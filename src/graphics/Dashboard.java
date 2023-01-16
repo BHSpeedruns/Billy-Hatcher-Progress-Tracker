@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -85,6 +86,8 @@ public class Dashboard {
 		menu.add(menuItem);
 		menuBar.add(menu);
 		frame.setJMenuBar(menuBar);
+		
+		frame.setIconImage(new ImageIcon("assets/Egg PNGs/High Quality/65-superrecky.png", "Super Recky").getImage());
 		
 		frame.setVisible(true);
 	}
