@@ -20,6 +20,7 @@ public class GraphicsDriver {
 	// Graphics Objects
 	public static ImageIcon chickCoin;
 	public static ImageIcon checkmark;
+	public static ImageIcon emblem;
 	public static ImageIcon[] worldIcons = new ImageIcon[7];
 	public static ImageIcon[] eggIcons = new ImageIcon[72];
 	public static ImageIcon[] itemIcons = new ImageIcon[72];
@@ -35,6 +36,7 @@ public class GraphicsDriver {
 	static {
 		chickCoin = new ImageIcon("assets/misc/chickcoin.png","Chick Coin");
 		checkmark = new ImageIcon("assets/misc/checkmark.png","Checkmark");
+		emblem = new ImageIcon("assets/misc/emblem.png","Emblem");
 		
 		worldIcons[0] = new ImageIcon("assets/misc/forest-village1.png"	, "Forest Village" 	);
 		worldIcons[1] = new ImageIcon("assets/misc/pirates-island.png"	, "Pirate's Island"	);
