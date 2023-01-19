@@ -217,6 +217,9 @@ public class LevelSelect {
 				if(GameDataLookup.getIsSonicEgg(eggs[i])) {
 					eggsInLevel[i].setToolTipText("Requires "+GameDataLookup.getSonicEggChickCoinRequirement(eggs[i])+" Chick Coins");
 				}
+				else {
+					eggsInLevel[i].setToolTipText(null);
+				}
 				
 				if(ProgressTracker.gamestate.getEggHatched(eggs[i])) {
 					Utils.overlayImageOn(egg, Utils.scaleIcon(GraphicsDriver.checkmark, 64, 64), 0, 0);
